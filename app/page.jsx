@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import {FunGet} from "funuicss/js/Fun"
 
-export default function App() {
+export default function App() { 
 const [message, setmessage] = useState("")
 
 const Submit = () => {
