@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import Div from 'funuicss/ui/div/Div'
 import Section from 'funuicss/ui/specials/Section'
@@ -7,16 +8,35 @@ import Input from 'funuicss/ui/input/Input'
 import  FullCenteredPage from 'funuicss/ui/specials/FullCenteredPage';
 import { PiPaperPlaneRight , PiKey, PiCheck } from 'react-icons/pi';
 import IconicInput from 'funuicss/ui/input/Iconic'
+import RowFlex from "funuicss/ui/specials/RowFlex"
+import Alert from "funuicss/ui/alert/Alert"
 import Link from 'next/link'
-export default function App() {
+import { useState } from 'react'
+import {FunGet} from "funuicss/js/Fun"
 
+export default function App() {
+const [message, setmessage] = useState("")
+
+const Submit = () => {
+   setmessage("")
+   let email , password 
+   email = FunGet.val("#email")
+   password = FunGet.val("#password")
+
+   if(email && password){
+
+   }else{
+      setmessage("Ënter your  email and password")
+   }
+}
 return (
 
 <div>
 <FullCenteredPage>
 <div className='width-300-max fit'>
 <div className="margin-bottom-40">
-<Text
+      <div>
+      <Text
    text='Welcome'
    heading='h2'
    block
@@ -25,33 +45,37 @@ return (
    text='Sign in to continue!'
    block
    />
+      </div>
+
 </div>
 <Section gap={1.5}>
    <Text text="Email" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
 <IconicInput 
    leftIcon={ <PiPaperPlaneRight />}
-   input={<Input type="email" fullWidth bordered />}
+   input={<Input type="email" id="email" fullWidth bordered />}
     />
 </Section>
 <Section gap={1}>
    <Text text="Password" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
 <IconicInput 
    leftIcon={  <PiKey />}
-   input={<Input type="password" fullWidth bordered />}
+   input={<Input type="password" id="password" fullWidth bordered />}
     />
 </Section>
+{
+   message &&
+   <Alert message={message} raised type="warning" fullWidth/>
+}
 
-     <div className="section">
-       <Link href={"/#"}>
-           <Text text='Forgot password!' size='small' underline color='primary'/>
-       </Link>
-</div>
+<Section gap={2} />
+
      <div className="section">
        <Button
        text={"Let's go"}
        raised
        fullWidth
        bg='primary800'
+       onClick={Submit}
        />
 </div>
 

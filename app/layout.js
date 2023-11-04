@@ -1,9 +1,9 @@
-import { Montserrat_Alternates } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import "funuicss/css/fun.css"
-const mont_serrat = Montserrat_Alternates({
+import "./assets/css/globals.css"
+const font = Montserrat({
   subsets: ["latin"] ,
- weight: ['400', '700' , '100', '200' , '500' , '900' , '800'],
-style: ['normal', 'italic'], })
+ weight: ['400', '700' , '100', '200' , '500' , '900' , '800'] })
 
 
 export const metadata = {
@@ -13,8 +13,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={mont_serrat.className}>{children}</body>
+    <html lang="en" className={font.className}>
+      <body className={font.className}>{children}</body>
     </html>
   )
 }
