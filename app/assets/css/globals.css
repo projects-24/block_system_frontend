@@ -1,3 +1,25 @@
 *, .button, .input{
   font-family: var(--font-font);
 }
+
+._sidebar{
+  position: fixed;
+  top: 70px;
+  height: calc(100% - 70px);
+  left: 0;
+  width: 250px;
+  padding: 3rem 2rem;
+  overflow: auto;
+}
+._content{
+  position: absolute;
+  top: 70px;
+  right: 0;
+  width: calc(100% - 250px);
+  padding: 3rem 2rem;
+  overflow: auto;
+}
+
+._sidelink{
+  justify-content: flex-start !important;
+}

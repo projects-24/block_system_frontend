@@ -24,7 +24,7 @@ const Submit = () => {
    password = FunGet.val("#password")
 
    if(email && password){
-
+      window.location.assign("/dashboard")
    }else{
       setmessage("Ënter your  email and password")
    }
