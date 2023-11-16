@@ -13,9 +13,13 @@ import Alert from "funuicss/ui/alert/Alert"
 import Link from 'next/link'
 import { useState } from 'react'
 import {FunGet} from "funuicss/js/Fun"
+import { LoginAccount } from '@/default/Functions'
+import Loader from '@/components/Loader'
+
 
 export default function App() { 
 const [message, setmessage] = useState("")
+const [loading, setloading] = useState("")
 
 const Submit = () => {
    setmessage("")
@@ -24,7 +28,15 @@ const Submit = () => {
    password = FunGet.val("#password")
 
    if(email && password){
-      window.location.assign("/dashboard")
+      setloading(true)
+      LoginAccount(email , password)
+      .then( () => {
+         window.location.assign("/dashboard")
+      } )
+      .catch(err => {
+         setmessage(err.message)
+         setloading(false)
+      } )
    }else{
       setmessage("Ënter your  email and password")
    }
@@ -32,6 +44,11 @@ const Submit = () => {
 return (
 
 <div>
+
+   {
+      loading && <Loader />
+   }
+
 <FullCenteredPage>
 <div className='width-300-max fit'>
 <div className="margin-bottom-40">

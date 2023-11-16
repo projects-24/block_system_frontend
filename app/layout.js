@@ -2,8 +2,9 @@ import { Montserrat } from 'next/font/google'
 import "funuicss/css/fun.css"
 import "./assets/css/globals.css"
 const font = Montserrat({
-  subsets: ["latin"] ,
- weight: ['400', '700' , '100', '200' , '500' , '900' , '800'] })
+  subsets: ["cyrillic"] ,
+ weight: ['400', '700' , '100', '200' , '300' , '500' , '900' , '800'] 
+})
 
 
 export const metadata = {
