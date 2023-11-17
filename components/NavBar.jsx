@@ -1,3 +1,4 @@
+'use client'
 import { HiUsers } from "react-icons/hi"; 
 import { AiFillAppstore } from "react-icons/ai"; 
 import { FaStoreAlt } from "react-icons/fa"; 
@@ -104,7 +105,7 @@ export default function NavBar({active}) {
           </Link>
       </ListItem>
       <ListItem>
-          <Link href="#">
+          <Link href="/staff">
               <Button
               fullWidth 
               funcss={`_sidelink ${active == 1 ? "card" : ''}`}
