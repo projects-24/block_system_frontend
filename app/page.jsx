@@ -66,14 +66,14 @@ return (
 
 </div>
 <Section gap={1.5}>
-   <Text text="Email" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
+   <Text text="Email*" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
 <IconicInput 
    leftIcon={ <PiPaperPlaneRight />}
    input={<Input type="email" id="email" fullWidth bordered />}
     />
 </Section>
 <Section gap={1}>
-   <Text text="Password" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
+   <Text text="Password*" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
 <IconicInput 
    leftIcon={  <PiKey />}
    input={<Input type="password" id="password" fullWidth bordered />}
@@ -91,7 +91,7 @@ return (
        text={"Let's go"}
        raised
        fullWidth
-       bg='primary800'
+       bg='primary'
        onClick={Submit}
        />
 </div>

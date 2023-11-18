@@ -94,3 +94,20 @@ export const RegisterAccount = (doc) => {
         .catch( err => reject(err) )
     })
 }
+
+
+export const GetRequest = (route) => {
+
+    return new Promise((resolve, reject) => {
+        Axios.get(end_point + route)
+        .then((res) => {
+            if(res.data.status == "ok"){
+                resolve(res.data)
+            }else{
+                reject(res.data)
+            }
+        })
+    })
+    .catch( err => reject(err) )
+
+}
