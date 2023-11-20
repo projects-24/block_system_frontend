@@ -38,6 +38,14 @@ export default function Dashboard() {
          text:"-- Select Query Type --"
      },
      {
+         value:"today",
+         text:"Today"
+     },
+     {
+         value:"this month",
+         text:"This Month"
+     },
+     {
          value:"daily",
          text:"Daily"
      },

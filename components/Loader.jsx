@@ -7,7 +7,6 @@ export default function Loader() {
     size="80px"
     color={"primary"}
     variant='circle'
-    backdrop
     fixed
     /></div>
   )

@@ -7,14 +7,14 @@ import Table from 'funuicss/ui/table/Table'
 import TableData from 'funuicss/ui/table/Data'
 import TableRow from 'funuicss/ui/table/Row'
 import Header from '@/components/Header'
-import { EndPoint } from '@/default/Functions'
+import { EndPoint , GetToken } from '@/default/Functions'
 import { GetRequest } from '@/default/Functions'
 import ErrorAlert from '@/components/Error'
 import RowFlex from 'funuicss/ui/specials/RowFlex'
 import Section from 'funuicss/ui/specials/Section'
 import Text from 'funuicss/ui/text/Text'
 import Button from 'funuicss/ui/button/Button'
-import { PiPlus } from 'react-icons/pi'
+import { PiCheck, PiPen, PiPlus, PiTrash } from 'react-icons/pi'
 import Modal from 'funuicss/ui/modal/Modal'
 import CloseModal from 'funuicss/ui/modal/Close'
 import Input from 'funuicss/ui/input/Input'
@@ -22,12 +22,25 @@ import Col from 'funuicss/ui/grid/Col'
 import {FunGet} from 'funuicss/js/Fun'
 import Loader from "@/components/Loader"
 import Axios  from 'axios'
+import Circle from "funuicss/ui/specials/Circle"
 
-export default function Staffs() {
+export default function Products() {
   const [err, seterr] = useState("")
   const [docs, setdocs] = useState('')
   const [loading, setloading] = useState(false)
   const [modal, setmodal] = useState(false)
+  const [udoc, setudoc] = useState('')
+
+  const [user, setuser] = useState("")
+  useEffect(() => {
+  if(!user){
+    GetToken()
+    .then( res => {
+     setuser(res.user)
+    } )
+  }
+  })
+
   useEffect(() => {
   setTimeout(() => {
     seterr(false)
@@ -36,9 +49,9 @@ export default function Staffs() {
   return clearTimeout()
   }, [err])
   
-  const GetStaffs = () => {
+  const GetProducts = () => {
     setloading(true)
-    GetRequest("/staffs")
+    GetRequest("/all/products")
     .then(res => {
       setdocs(res.data)
       setloading(false)
@@ -50,34 +63,57 @@ export default function Staffs() {
   }
   useEffect(() => {
    if(!docs){
-    GetStaffs()
+    GetProducts()
    }
   })
 
 
   const Submit = () => {
-    let email, username , contact, role, password , address
-    email = FunGet.val("#email")
-    username = FunGet.val("#username")
-    address = FunGet.val("#address")
-    contact = FunGet.val("#contact")
-    role = FunGet.val("#role")
-    password = FunGet.val("#password")
+    let name, number , price, description
+    name = FunGet.val("#name")
+    price = FunGet.val("#price")
+    description = FunGet.val("#description")
+    status = FunGet.val("#status")
 
-    const doc = {email, username, contact, role, password , address}
+    const doc = {
+      product:{
+        name ,
+        price,
+        description ,
+        status
+      },
+      price,
+      staff:user
+    }
    
     if(
-      email &&
-      username &&
-      address &&
-      contact &&
-      role &&
-      password 
+      name &&
+      price &&
+      description 
     ){
       setloading(true)
       setmodal(false)
 
-      Axios.post(EndPoint + "/staffs/register", doc)
+      if(udoc){
+     
+      Axios.patch(EndPoint + "/update/product/" + udoc._id, doc)
+      .then( res => {
+        setudoc("")
+        setloading(false)
+        if(res.data.status == "ok"){
+          setdocs("")
+        }else{
+          seterr(res.data.message)
+        }
+      })
+      .catch( err => {
+        setudoc("")
+        setloading(false)
+        seterr(err.message)
+      } )
+      }else{
+        
+      Axios.post(EndPoint + "/new/product", doc)
       .then( res => {
         setloading(false)
         if(res.data.status == "ok"){
@@ -90,6 +126,7 @@ export default function Staffs() {
         setloading(false)
         seterr(err.message)
       } )
+      }
 
     }else{
       seterr("Make sure to enter all fields")
@@ -108,13 +145,13 @@ duration={0.4}
 open={modal}
 backdrop
 maxWidth="500px"
-title={<Text text="Create Staff" heading='h4' funcss='padding' block/>}
+title={<Text text={udoc ? udoc.product.name : "New Product"} heading='h4' funcss='padding' block/>}
 body={
   <div>
       <RowFlex gap={1}>
         <Col>
         <Text 
-        text='Fullname*'
+        text='Product Name*'
         size='small'
         color='primary'
         bold
@@ -122,12 +159,13 @@ body={
          <Input
          bordered 
          fullWidth
-         id='username'
+         id='name'
+         defaultValue={udoc ? udoc.product.name : ""}
          />
         </Col>
         <Col>
         <Text 
-        text='Contact*'
+        text='Price*'
         size='small'
         color='primary'
         bold
@@ -135,15 +173,16 @@ body={
          <Input
          bordered 
          fullWidth
-         id='contact'
+         type='number'
+         id='price'
+         defaultValue={udoc ? udoc.price : ""}
          />
         </Col>
       </RowFlex>
       <Section />
-      <RowFlex gap={1}>
         <Col>
         <Text 
-        text='Address*'
+        text='Description*'
         size='small'
         color='primary'
         bold
@@ -151,28 +190,16 @@ body={
          <Input
          bordered 
          fullWidth
-         id='address'
+         multiline
+         rows={4}
+         id='description'
+         defaultValue={udoc ? udoc.product.description : ""}
          />
         </Col>
-        <Col>
-        <Text 
-        text='Email*'
-        size='small'
-        color='primary'
-        bold
-        />
-         <Input
-         bordered 
-         fullWidth
-         id='email'
-         />
-        </Col>
-
-      </RowFlex>
       <Section />
-      <Col>
+        <Col>
         <Text 
-        text='Role*'
+        text='Availabilty*'
         size='small'
         color='primary'
         bold
@@ -180,35 +207,18 @@ body={
          <Input
          bordered 
          fullWidth
-         id='role'
-         select 
+         id='status'
+         select
          options={[
-          {
-              value:"staff",
-              text:"Staff"
-          },
-          {
-              value:"admin",
-              text:"Admin"
-          }
+          {text:"Available" , value:"available"},
+          {text:"Not Available" , value:"not available"}
          ]}
+         defaultValue={udoc ? udoc.product.status : ""}
          />
         </Col>
-        <Section />
-        <Col>
-        <Text 
-        text='Password*'
-        size='small'
-        color='primary'
-        bold
-        />
-         <Input
-         bordered 
-         fullWidth
-         id='password'
-         type='password'
-         />
-        </Col>
+   
+
+    
 
          
 </div>
@@ -224,7 +234,8 @@ onClick={()=>setmodal(false)}
 <Button 
 bg="primary"
 raised
-text="Create"
+text="Submit"
+startIcon={<PiCheck />}
 rounded
 onClick={()=> Submit()}
 />
@@ -237,8 +248,8 @@ onClick={()=> Submit()}
         <NavBar active={4} />
         <Content>
             <Header 
-            title={"Staffs"} 
-            sub_title={"create and manage staffs"}
+            title={"Products"} 
+            sub_title={"create and manage Products"}
             sub_dir={"Dashboard"}
             sub_dir_route={"/dashboard"}
             />
@@ -254,10 +265,13 @@ onClick={()=> Submit()}
    outlined 
    outlineSize={0.13}
    startIcon={<PiPlus />}
-   onClick={ () => setmodal(true) }
+   onClick={ () => {
+    setmodal(true) 
+    setudoc("")
+   }}
    fillTextColor='dark900' 
     bg="indigo600" 
-    text="Create Staff"
+    text="Create product"
     fillDirection='bottom'
     />
             </RowFlex>
@@ -268,10 +282,12 @@ onClick={()=> Submit()}
        hoverable
        stripped
        head={<>
-    <TableData>Fullname</TableData>
-         <TableData>Role</TableData>
-         <TableData>Contact</TableData>
-         <TableData>Address</TableData>
+    <TableData>No</TableData>
+         <TableData>Name</TableData>
+         <TableData>Price</TableData>
+         <TableData>Status</TableData>
+         <TableData>Update</TableData>
+         <TableData>Delete</TableData>
        </>}
        body={
            <>
@@ -279,10 +295,27 @@ onClick={()=> Submit()}
           docs &&
           docs.map(res => (
             <TableRow>
-            <TableData>{res.username}</TableData>
-            <TableData>{res.role}</TableData>
-            <TableData>{res.contact}</TableData>
-            <TableData>{res.address}</TableData>
+            <TableData>{res.number}</TableData>
+            <TableData>{res.product.name}</TableData>
+           <TableData>{res.price}</TableData>
+           <TableData>{res.product.status}</TableData>
+           <TableData>
+            <span onClick={ () => {
+              setudoc(res)
+              setmodal(true)
+            } }>
+     <Circle  size={2.5} raised bg='success' >
+              <PiPen />
+            </Circle>
+            </span>
+       
+           </TableData>
+           <TableData>
+           <Circle  size={2.5} raised bg='error'>
+              <PiTrash />
+            </Circle>
+           </TableData>
+     
           </TableRow>
           ))
         }

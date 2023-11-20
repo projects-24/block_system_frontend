@@ -66,7 +66,7 @@ export default function NavBar({active}) {
       <List gap={0.2}>
       
       <ListItem>
-          <Link href="#">
+          <Link href="/dashboard">
               <Button
               fullWidth 
               funcss={`_sidelink ${active == 0 ? "card" : ''}`}
@@ -92,7 +92,7 @@ export default function NavBar({active}) {
           </Link>
       </ListItem>
       <ListItem>
-          <Link href="#">
+          <Link href="/products">
               <Button
               fullWidth 
               funcss={`_sidelink ${active == 1 ? "card" : ''}`}
