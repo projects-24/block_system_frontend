@@ -1,5 +1,5 @@
 *, .button, .input{
-  font-family: var(--font-font);
+  font-family: var(--font-font) ;
 }
 
 ._sidebar{

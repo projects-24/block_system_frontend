@@ -14,7 +14,7 @@ import RowFlex from 'funuicss/ui/specials/RowFlex'
 import Section from 'funuicss/ui/specials/Section'
 import Text from 'funuicss/ui/text/Text'
 import Button from 'funuicss/ui/button/Button'
-import { PiCheck, PiPen, PiPlus, PiTrash, PiX } from 'react-icons/pi'
+import { PiCheck, PiPen, PiPlus, PiStorefront, PiTag, PiTrash, PiX } from 'react-icons/pi'
 import Modal from 'funuicss/ui/modal/Modal'
 import CloseModal from 'funuicss/ui/modal/Close'
 import Input from 'funuicss/ui/input/Input'
@@ -29,7 +29,7 @@ export default function Products() {
   const [err, seterr] = useState("")
   const [docs, setdocs] = useState('')
   const [loading, setloading] = useState(false)
-  const [udoc, setudoc] = useState('')
+  let [sell_doc, setsell_doc] = useState([])
   const [modal, setmodal] = useState(false)
   const [modal2, setmodal2] = useState(false)
   const [delete_doc, setdelete_doc] = useState("")
@@ -97,11 +97,11 @@ export default function Products() {
       setloading(true)
       setmodal(false)
 
-      if(udoc){
+      if(sell_doc){
      
-      Axios.patch(EndPoint + "/update/product/" + udoc._id, doc)
+      Axios.patch(EndPoint + "/update/product/" + sell_doc._id, doc)
       .then( res => {
-        setudoc("")
+        setsell_doc("")
         setloading(false)
         if(res.data.status == "ok"){
           setdocs("")
@@ -110,7 +110,7 @@ export default function Products() {
         }
       })
       .catch( err => {
-        setudoc("")
+        setsell_doc("")
         setloading(false)
         seterr(err.message)
       } )
@@ -166,7 +166,7 @@ title={
 <Div funcss="container">
 <RowFlex justify='space-between'>
         <Text 
-        text={`Delete ${delete_doc ? delete_doc.product.name : ''}`}
+        text={`Delete ${delete_doc != [] ? delete_doc.product.name : ''}`}
         heading='h4'
         />
         <PiX 
@@ -211,84 +211,50 @@ footer={
 animation="ScaleUp" 
 duration={0.4} 
 open={modal}
-backdrop
-maxWidth="500px"
-title={<Text text={udoc ? udoc.product.name : "New Product"} heading='h4' funcss='padding' block/>}
+maxWidth="800px"
+title={<Text text={ "Cart"} heading='h4' funcss='padding' block/>}
 body={
-  <div>
-      <RowFlex gap={1}>
-        <Col>
-        <Text 
-        text='Product Name*'
-        size='small'
-        color='primary'
-        bold
-        />
-         <Input
-         bordered 
-         fullWidth
-         id='name'
-         defaultValue={udoc ? udoc.product.name : ""}
-         />
-        </Col>
-        <Col>
-        <Text 
-        text='Price*'
-        size='small'
-        color='primary'
-        bold
-        />
-         <Input
-         bordered 
-         fullWidth
-         type='number'
-         id='price'
-         defaultValue={udoc ? udoc.price : ""}
-         />
-        </Col>
-      </RowFlex>
-      <Section />
-        <Col>
-        <Text 
-        text='Description*'
-        size='small'
-        color='primary'
-        bold
-        />
-         <Input
-         bordered 
-         fullWidth
-         multiline
-         rows={4}
-         id='description'
-         defaultValue={udoc ? udoc.product.description : ""}
-         />
-        </Col>
-      <Section />
-        <Col>
-        <Text 
-        text='Availabilty*'
-        size='small'
-        color='primary'
-        bold
-        />
-         <Input
-         bordered 
-         fullWidth
-         id='status'
-         select
-         options={[
-          {text:"Available" , value:"available"},
-          {text:"Not Available" , value:"not available"}
-         ]}
-         defaultValue={udoc ? udoc.product.status : ""}
-         />
-        </Col>
-   
+<div>
+    <div>
+    {
+        sell_doc && 
+        <Table 
+       funcss='text-small'
+       hoverable
+       stripped
+       head={<>
+    <TableData>Product</TableData>
+         <TableData>Price</TableData>
+         <TableData>Quantity</TableData>
+         <TableData>Remove</TableData>
+       </>}
+       body={
+           <>
+          { 
+                sell_doc &&
+                sell_doc.map(doc => (
+                    <TableRow>
+                      <TableData>{doc.product.name}</TableData>
+                      <TableData>{doc.price}</TableData>
+                      <TableData>
+                        <Input type='number' defaultValue='1' label='Quantity'/>
+                      </TableData>
+                      <TableData>
+                      <Circle  size={2} raised bg='error'>
+              <PiTrash />
+            </Circle>
+                      </TableData>
+                  </TableRow>
+                    ) )
+          }
+           </>
+       }
+       >
 
-    
 
-         
+ </Table>
+     }
+    </div>         
 </div>
 }
 footer={
@@ -302,7 +268,7 @@ onClick={()=>setmodal(false)}
 <Button 
 bg="primary"
 raised
-text="Submit"
+text="Check Out"
 startIcon={<PiCheck />}
 rounded
 onClick={()=> Submit()}
@@ -316,8 +282,8 @@ onClick={()=> Submit()}
         <NavBar active={4} />
         <Content>
             <Header 
-            title={"Products"} 
-            sub_title={"create and manage Products"}
+            title={"Store"} 
+            sub_title={"Sell products"}
             sub_dir={"Dashboard"}
             sub_dir_route={"/dashboard"}
             />
@@ -328,20 +294,19 @@ onClick={()=> Submit()}
               <Text text={"Total"} size='small' color='primary' bold/>
             <Text text={docs ? docs.length : ""} block heading='h3'/>
               </div>
-    <Button 
-   fillAnimation 
-   outlined 
-   outlineSize={0.13}
-   startIcon={<PiPlus />}
-   onClick={ () => {
-    setmodal(true) 
-    setudoc("")
-   }}
-   fillTextColor='dark900' 
-    bg="indigo600" 
-    text="Create product"
-    fillDirection='bottom'
-    />
+
+              <div>
+                <Button
+                color='primary'
+                funcss='text-bold'
+                startIcon={<PiStorefront size={20} />}
+                text={`${sell_doc ? sell_doc.length : ''} View Cart`}
+                onClick={() => {
+                    setmodal(true)
+                } }
+                />
+              </div>
+
             </RowFlex>
             }
             >
@@ -354,8 +319,7 @@ onClick={()=> Submit()}
          <TableData>Name</TableData>
          <TableData>Price</TableData>
          <TableData>Status</TableData>
-         <TableData>Update</TableData>
-         <TableData>Delete</TableData>
+         <TableData>Sell</TableData>
        </>}
        body={
            <>
@@ -368,30 +332,27 @@ onClick={()=> Submit()}
            <TableData>{res.price}</TableData>
            <TableData>
             {
-            res.product.status  == "available" ? <span className='success text-smaller raised padding-5 width-80 block  text-center round-edge'> Availble </span>
-          : <span className='error text-smaller raised padding-5 width-80 block  text-center round-edge'>Not Availble </span>
+            res.product.status  == "available" ? <span className='success raised padding-5 width-80 block  text-center round-edge'> Availble </span>
+          : <span className='error raised padding-5 width-80 block  text-center round-edge'>Not Availble </span>
           }
           </TableData>
            <TableData>
             <span onClick={ () => {
-              setudoc(res)
-              setmodal(true)
+             if(sell_doc.length > 0){
+                sell_doc.filter(fdoc => {
+                    if(fdoc.number != res.number){
+                        sell_doc.push(res)
+                    }
+                })
+             }else{
+                sell_doc.push(res)
+             }
             } }>
      <Circle  size={2} raised bg='success' >
-              <PiPen />
+              <PiTag />
             </Circle>
             </span>
        
-           </TableData>
-           <TableData>
-           <span onClick={() => {
-            setmodal2(true)
-            setdelete_doc(res)
-           } }>
-           <Circle  size={2} raised bg='error'>
-              <PiTrash />
-            </Circle>
-           </span>
            </TableData>
      
           </TableRow>

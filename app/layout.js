@@ -1,8 +1,8 @@
-import { Montserrat } from 'next/font/google'
+import { Raleway } from 'next/font/google'
 import "funuicss/css/fun.css"
 import "./assets/css/globals.css"
-const font = Montserrat({
-  subsets: ["cyrillic"] ,
+const font = Raleway({
+  subsets: ["latin" , 'cyrillic'] ,
  weight: ['400', '700' , '100', '200' , '300' , '500' , '900' , '800'] 
 })
 

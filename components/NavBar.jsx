@@ -79,7 +79,7 @@ export default function NavBar({active}) {
           </Link>
       </ListItem>
       <ListItem>
-          <Link href="#">
+          <Link href="/store">
               <Button
               fullWidth 
               funcss={`_sidelink ${active == 1 ? "card" : ''}`}
