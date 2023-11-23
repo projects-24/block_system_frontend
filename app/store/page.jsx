@@ -24,6 +24,7 @@ import Loader from "@/components/Loader"
 import Axios  from 'axios'
 import Circle from "funuicss/ui/specials/Circle"
 import Div from 'funuicss/ui/div/Div'
+import Multiselect from 'multiselect-react-dropdown';
 
 export default function Products() {
   const [err, seterr] = useState("")
@@ -33,6 +34,7 @@ export default function Products() {
   const [modal, setmodal] = useState(false)
   const [modal2, setmodal2] = useState(false)
   const [delete_doc, setdelete_doc] = useState("")
+  let [cart, setcart] = useState([])
 
   const [user, setuser] = useState("")
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function Products() {
   
   const GetProducts = () => {
     setloading(true)
-    GetRequest("/all/products")
+    GetRequest("/available/products")
     .then(res => {
       setdocs(res.data)
       setloading(false)
@@ -220,13 +222,11 @@ body={
         sell_doc && 
         <Table 
        funcss='text-small'
-       hoverable
        stripped
        head={<>
     <TableData>Product</TableData>
          <TableData>Price</TableData>
          <TableData>Quantity</TableData>
-         <TableData>Remove</TableData>
        </>}
        body={
            <>
@@ -237,13 +237,32 @@ body={
                       <TableData>{doc.product.name}</TableData>
                       <TableData>{doc.price}</TableData>
                       <TableData>
-                        <Input type='number' defaultValue='1' label='Quantity'/>
+                        <Input 
+                        type='number' 
+                        defaultValue={1} 
+                        label='Quantity' 
+                        bordered
+                        onChange={(e) => {
+                          let quantity = e.target.value
+                          let res =  {
+                                   "_id": doc._id,
+                                   "product": doc.product,
+                                   "price": doc.price,
+                                   "number": doc.number,
+                                   "quantity" : quantity
+                                 }
+                          if(cart.length > 0){
+                            console.log('next push')
+                            const fdoc = cart.find(p => p.number === res.number);
+                            console.log(fdoc)
+                           }else{
+                            cart.push(res)
+                            console.log('push 1')
+                           }
+                        }}
+                        />
                       </TableData>
-                      <TableData>
-                      <Circle  size={2} raised bg='error'>
-              <PiTrash />
-            </Circle>
-                      </TableData>
+                     
                   </TableRow>
                     ) )
           }
@@ -287,84 +306,34 @@ onClick={()=> Submit()}
             sub_dir={"Dashboard"}
             sub_dir_route={"/dashboard"}
             />
-            <Card
-            header={
-            <RowFlex funcss="padding bb text-dark" gap={1} justify="space-between">
-              <div>
-              <Text text={"Total"} size='small' color='primary' bold/>
-            <Text text={docs ? docs.length : ""} block heading='h3'/>
-              </div>
-
-              <div>
-                <Button
-                color='primary'
-                funcss='text-bold'
-                startIcon={<PiStorefront size={20} />}
-                text={`${sell_doc ? sell_doc.length : ''} View Cart`}
-                onClick={() => {
-                    setmodal(true)
-                } }
-                />
-              </div>
-
-            </RowFlex>
-            }
-            >
-            <Table 
-       funcss='text-small'
-       hoverable
-       stripped
-       head={<>
-    <TableData>No</TableData>
-         <TableData>Name</TableData>
-         <TableData>Price</TableData>
-         <TableData>Status</TableData>
-         <TableData>Sell</TableData>
-       </>}
-       body={
-           <>
-        {
-          docs &&
-          docs.map(res => (
-            <TableRow>
-            <TableData>{res.number}</TableData>
-            <TableData>{res.product.name}</TableData>
-           <TableData>{res.price}</TableData>
-           <TableData>
             {
-            res.product.status  == "available" ? <span className='success raised padding-5 width-80 block  text-center round-edge'> Availble </span>
-          : <span className='error raised padding-5 width-80 block  text-center round-edge'>Not Availble </span>
-          }
-          </TableData>
-           <TableData>
-            <span onClick={ () => {
-             if(sell_doc.length > 0){
-                sell_doc.filter(fdoc => {
-                    if(fdoc.number != res.number){
-                        sell_doc.push(res)
-                    }
-                })
-             }else{
-                sell_doc.push(res)
-             }
-            } }>
-     <Circle  size={2} raised bg='success' >
-              <PiTag />
-            </Circle>
-            </span>
-       
-           </TableData>
-     
-          </TableRow>
-          ))
-        }
-           </>
-       }
-       >
-
-
- </Table>
-            </Card>
+              docs &&
+              <RowFlex gap={1} justify='space-between'>
+       <Col>
+       <Multiselect
+options={docs} // Options to display in the dropdown
+// selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+onSelect={(selectedList, selectedItem) => setsell_doc(selectedList)} // Function will trigger on select event
+// onRemove={this.onRemove} // Function will trigger on remove event
+displayValue="number" // Property name to display in the dropdown options
+/>
+       </Col>
+       <Col>
+          <Button
+          bg='primary'
+          raised
+          funcss='text-bold'
+          startIcon={<PiStorefront size={20} />}
+          text={`${sell_doc ? sell_doc.length : ''} View Cart`}
+          onClick={() => {
+          setmodal(true)
+          } }
+          />
+               </Col>
+              </RowFlex>
+          
+            }
+           
         </Content>
     </div>
   )
