@@ -14,7 +14,7 @@ import RowFlex from 'funuicss/ui/specials/RowFlex'
 import Section from 'funuicss/ui/specials/Section'
 import Text from 'funuicss/ui/text/Text'
 import Button from 'funuicss/ui/button/Button'
-import { PiEye, PiMoney, PiPlus, PiPrinter } from 'react-icons/pi'
+import { PiCheck, PiEye, PiMoney, PiPlus, PiPrinter } from 'react-icons/pi'
 import Modal from 'funuicss/ui/modal/Modal'
 import CloseModal from 'funuicss/ui/modal/Close'
 import Input from 'funuicss/ui/input/Input'
@@ -29,6 +29,10 @@ export default function Staffs() {
   const [docs, setdocs] = useState('')
   const [loading, setloading] = useState(false)
   const [modal, setmodal] = useState(false)
+  const [installmentModal, setinstallmentModal] = useState(false)
+  const [doc, setdoc] = useState("")
+  const [modal_type, setmodal_type] = useState("")
+
   useEffect(() => {
   setTimeout(() => {
     seterr(false)
@@ -98,11 +102,54 @@ export default function Staffs() {
     }
   }
   
+  const HandlePay = () => {
+    const amount = FunGet.val("#amount")
+    if(amount){
+      setloading(true)
+      Axios.post(`${EndPoint}/payment/${doc._id}/${amount}`)
+      .then( res => {
+        setloading("")
+        const data = res.data 
+        if(data.status == "ok"){
+          setdoc("")
+          setdocs("")
+        }else{
+          seterr(data.message)
+        }
+      } )
+      .catch( err => {
+        setloading(false)
+        seterr(err.message)
+      } )
+ 
+    }else{
+      seterr("Make sure to enter the amount to pay")
+    }
+  }
   return (
     <div>
 
       {loading && <Loader />}
-      <SaleModal />
+      <SaleModal 
+      close={<CloseModal onClick={() => setinstallmentModal(false)} />}
+      open={installmentModal}
+      doc={doc}
+      footer={<>
+          <Text text="Amount (GHC)" funcss="margin-bottom-10" block size="small" bold color="primary"/>
+    <Input bordered fullWidth type='number'  id='amount' label={`${doc ? parseFloat(doc.payment.total_amount) - parseFloat(doc.payment.amount_payed) : ""}`} />
+      </>}
+      modal_type={modal_type}
+      paybtn={<RowFlex gap={1} justify='flex-end'>
+      <Button
+      text='Pay'
+      bg='primary'
+      raised
+      color='text-bold'
+      startIcon={<PiCheck />}
+      onClick={HandlePay}
+      />
+  </RowFlex>}
+      />
 
 <Modal 
 animation="ScaleUp" 
@@ -269,6 +316,8 @@ onClick={()=> Submit()}
          <TableData>Price </TableData>
          <TableData>Quantity </TableData>
          <TableData>customer contact</TableData>
+         <TableData>Total Amount</TableData>
+         <TableData>Amount Payed</TableData>
          <TableData>Sold By</TableData>
          <TableData>Date</TableData>
          <TableData>Time</TableData>
@@ -295,6 +344,12 @@ onClick={()=> Submit()}
                     {res.customer.contact}
                 </TableData>
                 <TableData>
+                    {res.payment.total_amount}
+                </TableData>
+                <TableData>
+                    {res.payment.amount_payed}
+                </TableData>
+                <TableData>
                     {res.staff.username}
                 </TableData>
                 <TableData>
@@ -306,6 +361,11 @@ onClick={()=> Submit()}
                 <TableData>
                    <Button
                    text="View"
+                   onClick={() => {
+                    setdoc(res)
+                    setmodal_type("view")
+                    setinstallmentModal(true)
+                   } }
                    small 
                    raised 
                    bg="dark"
@@ -315,6 +375,11 @@ onClick={()=> Submit()}
                 <TableData>
                 <Button
                    text="Pay"
+                   onClick={() => {
+                    setdoc(res)
+                    setmodal_type("pay")
+                    setinstallmentModal(true)
+                   } }
                    small 
                    raised 
                    bg="success"

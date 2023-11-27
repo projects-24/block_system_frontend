@@ -58,8 +58,27 @@ export default function Products() {
     setloading(true)
     GetRequest("/available/products")
     .then(res => {
-      setdocs(res.data)
       setloading(false)
+
+      if(res.status == "ok"){
+        let store_products = res.data
+        // Function to add the "quantity" field to each product
+function addQuantityToProducts(store_products) {
+  for (const product of store_products) {
+    // You can set the quantity to any value you desire, for example, 1.
+    product.product.quantity = 1;
+  }
+}
+
+// Call the function to add the "quantity" field
+addQuantityToProducts(store_products);
+
+setdocs(store_products)
+
+
+      }else{
+        seterr(res.message)
+      }
     })
     .catch( err => {
       setloading(false)
@@ -240,26 +259,26 @@ body={
                       <TableData>
                         <Input 
                         type='number' 
-                        defaultValue={1} 
+                        defaultValue={doc.product.quantity} 
                         label='Quantity' 
                         bordered
                         onChange={(e) => {
                           let quantity = e.target.value
-                          let res =  {
-                                   "_id": doc._id,
-                                   "product": doc.product,
-                                   "price": doc.price,
-                                   "number": doc.number,
-                                   "quantity" : quantity
-                                 }
-                          if(cart.length > 0){
-                            console.log('next push')
-                            const fdoc = cart.find(p => p.number === res.number);
-                            console.log(fdoc)
-                           }else{
-                            cart.push(res)
-                            console.log('push 1')
-                           }
+                         // Function to update the quantity value based on _id
+function updateQuantityById(_id, newQuantity) {
+  const productToUpdate = sell_doc.find(product => product._id === _id);
+
+  if (productToUpdate) {
+    // Update the quantity value
+    productToUpdate.product.quantity = newQuantity;
+  } else {
+    console.log(`Product with _id ${_id} not found.`);
+  }
+}
+
+// Example: Update quantity for a specific product
+updateQuantityById(doc._id, quantity);
+                       
                         }}
                         />
                       </TableData>
