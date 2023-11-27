@@ -313,7 +313,7 @@ onClick={()=> Submit()}
       
       {err && <ErrorAlert message={err} />}
 
-        <NavBar active={4} />
+        <NavBar active={2} />
         <Content>
             <Header 
             title={"Products"} 
