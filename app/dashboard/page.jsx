@@ -10,7 +10,7 @@ import Grid from 'funuicss/ui/grid/Grid'
 import Col from 'funuicss/ui/grid/Col'
 import Card from 'funuicss/ui/card/Card'
 import RowFlex from 'funuicss/ui/specials/RowFlex'
-import {PiArrowDown, PiArrowUp, PiCursorClickDuotone,  PiPrinter,  PiUsersDuotone,  PiVoicemailDuotone} from 'react-icons/pi'
+import {PiArrowDown, PiArrowUp, PiCursorClickDuotone,  PiEye,  PiMoney,  PiPrinter,  PiUsersDuotone,  PiVoicemailDuotone} from 'react-icons/pi'
 import Button from 'funuicss/ui/button/Button'
 import Input from 'funuicss/ui/input/Input'
 import Axios from "axios";
@@ -21,6 +21,9 @@ import Table from 'funuicss/ui/table/Table'
 import TableData from 'funuicss/ui/table/Data'
 import TableRow from 'funuicss/ui/table/Row'
 import Section from "funuicss/ui/specials/Section";
+import SaleModal from '@/components/Sale'
+import CloseModal from 'funuicss/ui/modal/Close'
+
 export default function Dashboard() {
 
     const [query_type, setquery_type] = useState("")
@@ -32,7 +35,9 @@ export default function Dashboard() {
     const [start_interval, setstart_interval] = useState("")
     const [end_interval, setend_interval] = useState("")
     const [daily, setdaily] = useState("")
-
+    const [installmentModal, setinstallmentModal] = useState(false)
+    const [doc, setdoc] = useState("")
+    const [modal_type, setmodal_type] = useState("")
     useEffect(() => {
         setTimeout(() => {
           seterr(false)
@@ -82,7 +87,11 @@ export default function Dashboard() {
     <div>
         <NavBar active={0}/>
         {loading && <Loader />}
-
+        <SaleModal 
+      close={<CloseModal onClick={() => setinstallmentModal(false)} />}
+      open={installmentModal}
+      doc={doc}
+      />
         {
    err &&
    <Alert message={err} raised type="warning" fixed="top-right"/>
@@ -310,14 +319,15 @@ bold
     funcss="text-small"
     stripped
  head={<>
-    <TableData>Products</TableData>
+           <TableData>Customer </TableData>
          <TableData>Price </TableData>
          <TableData>Quantity </TableData>
-         <TableData>customer </TableData>
-         <TableData>customer contact</TableData>
+         <TableData>Contact</TableData>
+         <TableData>Method</TableData>
          <TableData>Sold By</TableData>
          <TableData>Date</TableData>
          <TableData>Time</TableData>
+         <TableData>View</TableData>
        </>}
        body={
            <>
@@ -325,22 +335,34 @@ bold
             docs && 
             docs.data.map(res => (
                 <TableRow key={res._id}>
-                <TableData>
-                    {res.products.map(d => {
-                        <span key={d.number}>{d.number}</span>
-
-                })}</TableData>
+                   <TableData>
+                    {res.customer.full_name}
+                </TableData>
                 <TableData>
                     {res.total_price}
                 </TableData>
                 <TableData>
                     {res.total_quantity}
                 </TableData>
-                <TableData>
-                    {res.customer.full_name}
-                </TableData>
+        
                 <TableData>
                     {res.customer.contact}
+                </TableData>
+                <TableData>
+                {
+                res.payment.method == "cash" ? 
+                <Button
+                text="Cash"
+                startIcon={<PiMoney />}
+                smaller
+                bg="success"
+                />:    <Button
+                text="Installment"
+                smaller
+                bg="dark"
+                />
+                    
+                }
                 </TableData>
                 <TableData>
                     {res.staff.username}
@@ -350,6 +372,20 @@ bold
                 </TableData>
                 <TableData>
                     {res.analytics.time}
+                </TableData>
+                <TableData>
+                <Button
+                   text="View"
+                   onClick={() => {
+                    setdoc(res)
+                    setmodal_type("view")
+                    setinstallmentModal(true)
+                   } }
+                   small 
+                   raised 
+                   bg="dark"
+                   startIcon={<PiEye />}
+                   />
                 </TableData>
               </TableRow>
             ))

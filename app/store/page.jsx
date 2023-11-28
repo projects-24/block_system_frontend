@@ -19,15 +19,17 @@ import Modal from 'funuicss/ui/modal/Modal'
 import CloseModal from 'funuicss/ui/modal/Close'
 import Input from 'funuicss/ui/input/Input'
 import Col from 'funuicss/ui/grid/Col'
+import Grid from 'funuicss/ui/grid/Grid'
 import {FunGet} from 'funuicss/js/Fun'
 import Loader from "@/components/Loader"
 import Axios  from 'axios'
 import Circle from "funuicss/ui/specials/Circle"
 import Div from 'funuicss/ui/div/Div'
 import Multiselect from 'multiselect-react-dropdown';
-
+import Alert from 'funuicss/ui/alert/Alert'
 export default function Products() {
   const [err, seterr] = useState("")
+  const [success, setsuccess] = useState("")
   const [docs, setdocs] = useState('')
   const [loading, setloading] = useState(false)
   let [sell_doc, setsell_doc] = useState([])
@@ -35,6 +37,7 @@ export default function Products() {
   const [modal2, setmodal2] = useState(false)
   const [delete_doc, setdelete_doc] = useState("")
   let [cart, setcart] = useState([])
+  const [payment_method, setpayment_method] = useState('')
 
   const [user, setuser] = useState("")
   useEffect(() => {
@@ -49,14 +52,15 @@ export default function Products() {
   useEffect(() => {
   setTimeout(() => {
     seterr(false)
+    setsuccess(false)
   }, 5000);
 
   return clearTimeout()
-  }, [err])
+  }, [err , success])
   
   const GetProducts = () => {
     setloading(true)
-    GetRequest("/available/products")
+    GetRequest("/store/products")
     .then(res => {
       setloading(false)
 
@@ -66,7 +70,7 @@ export default function Products() {
 function addQuantityToProducts(store_products) {
   for (const product of store_products) {
     // You can set the quantity to any value you desire, for example, 1.
-    product.product.quantity = 1;
+    product.quantity = 1;
   }
 }
 
@@ -93,39 +97,46 @@ setdocs(store_products)
 
 
   const Submit = () => {
-    let name, number , price, description
-    name = FunGet.val("#name")
-    price = FunGet.val("#price")
-    description = FunGet.val("#description")
-    status = FunGet.val("#status")
+    let name, address , tel , start_amount
+    name = FunGet.val("#customer_name")
+    address = FunGet.val("#customer_address")
+    tel = FunGet.val("#customer_tel")
+    start_amount = FunGet.val("#start_amount")
 
-    const doc = {
-      product:{
-        name ,
-        price,
-        description ,
-        status
-      },
-      price,
-      staff:user
+    const cash_doc = {
+      products:sell_doc,
+      customer:{ full_name: name , contact:tel , address },
+      staff:user,
+      payment:{} ,
+      payment_method
+    }
+    const installment_doc = {
+      products:sell_doc,
+      customer:{ full_name: name , contact:tel , address },
+      staff:user,
+      payment:{} ,
+      amount_payed_by_customer: start_amount ,
+      payment_method
     }
    
     if(
       name &&
-      price &&
-      description 
+      address &&
+      tel &&
+      payment_method 
     ){
       setloading(true)
       setmodal(false)
 
-      if(sell_doc){
+      if(payment_method == "cash"){
      
-      Axios.patch(EndPoint + "/update/product/" + sell_doc._id, doc)
+      Axios.post(EndPoint + "/sell" , cash_doc)
       .then( res => {
         setsell_doc("")
         setloading(false)
         if(res.data.status == "ok"){
           setdocs("")
+          setsuccess("You have successfully sold the products")
         }else{
           seterr(res.data.message)
         }
@@ -137,11 +148,12 @@ setdocs(store_products)
       } )
       }else{
         
-      Axios.post(EndPoint + "/new/product", doc)
+      Axios.post(EndPoint + "/sell", installment_doc)
       .then( res => {
         setloading(false)
         if(res.data.status == "ok"){
           setdocs("")
+          setsuccess("You have successfully sold the products")
         }else{
           seterr(res.data.message)
         }
@@ -233,11 +245,11 @@ footer={
 animation="ScaleUp" 
 duration={0.4} 
 open={modal}
-maxWidth="800px"
+maxWidth="90vw"
 title={<Text text={ "Cart"} heading='h4' funcss='padding' block/>}
 body={
-<div>
-    <div>
+<div className='row'>
+    <div className='col sm-12 md-6 lg-6 padding'>
     {
         sell_doc && 
         <Table 
@@ -259,7 +271,7 @@ body={
                       <TableData>
                         <Input 
                         type='number' 
-                        defaultValue={doc.product.quantity} 
+                        defaultValue={doc.quantity} 
                         label='Quantity' 
                         bordered
                         onChange={(e) => {
@@ -270,7 +282,7 @@ function updateQuantityById(_id, newQuantity) {
 
   if (productToUpdate) {
     // Update the quantity value
-    productToUpdate.product.quantity = newQuantity;
+    productToUpdate.quantity = newQuantity;
   } else {
     console.log(`Product with _id ${_id} not found.`);
   }
@@ -293,7 +305,71 @@ updateQuantityById(doc._id, quantity);
 
  </Table>
      }
-    </div>         
+    </div>   
+    <div className="col sm-12 md-6 lg-6 padding">
+      <div className="padding">
+      <Text
+      text='Customer'
+      />
+      </div>
+      <Grid>
+        <Col sm={12} md={6} lg={6} funcss='padding'>
+        <Text text="Name" funcss="margin-bottom-10" block size="small" bold color="primary"/>
+        <Input 
+        bordered 
+        fullWidth 
+        id='customer_name'
+        />
+        </Col>
+        <Col sm={12} md={6} lg={6} funcss='padding'>
+        <Text text="Address | Location" funcss="margin-bottom-10" block size="small" bold color="primary"/>
+        <Input 
+        bordered 
+        fullWidth 
+        id='customer_address'
+        />
+        </Col>
+        <Col sm={12} md={6} lg={6} funcss='padding'>
+        <Text text="Contact" funcss="margin-bottom-10" block size="small" bold color="primary"/>
+        <Input 
+        bordered 
+        fullWidth 
+        id='customer_tel'
+        />
+        </Col>
+        <Col sm={12} md={6} lg={6} funcss='padding'>
+        <Text text="Payment Method" funcss="margin-bottom-10" block size="small" bold color="primary"/>
+        <Input 
+        onChange={(e) => setpayment_method(e.target.value) }
+        bordered 
+        fullWidth 
+        select
+        options={[
+          {"text" : "Select method" , value:""},
+          {"text" : "Cash" , value:"cash"},
+          {"text" : "Installment" , value:"installment"},
+        ]}
+        id='payment_method'
+        />
+        </Col>
+       {
+        payment_method == "installment" ?
+        <Col sm={12} md={12} lg={12} funcss='padding'>
+        <Text text="Start Amount (GHC)" funcss="margin-bottom-10" block size="small" bold color="primary"/>
+        <Input 
+        bordered 
+        fullWidth 
+        type='number'
+        id='start_amount'
+        defaultValue={0}
+        />
+        </Col>
+        :""
+       }
+     
+
+      </Grid>
+    </div>      
 </div>
 }
 footer={
@@ -317,7 +393,8 @@ onClick={()=> Submit()}
 />
       
       {err && <ErrorAlert message={err} />}
-
+      {success && <Alert message={success} type="success" fixed="top-right" />}
+   
         <NavBar active={1} />
         <Content>
             <Header 
@@ -328,14 +405,16 @@ onClick={()=> Submit()}
             />
             {
               docs &&
-              <RowFlex gap={1} justify='space-between'>
+              
+              <RowFlex gap={1} justify='space-between' >
        <Col>
        <Multiselect
+       
 options={docs} // Options to display in the dropdown
 // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
 onSelect={(selectedList, selectedItem) => setsell_doc(selectedList)} // Function will trigger on select event
 // onRemove={this.onRemove} // Function will trigger on remove event
-displayValue="number" // Property name to display in the dropdown options
+displayValue="product_name" // Property name to display in the dropdown options
 />
        </Col>
        <Col>

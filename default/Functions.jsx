@@ -7,6 +7,7 @@ let end_point
 
 
 // endpoint
+// end_point = "http://127.0.0.1:8000"
 end_point = "https://atbil-blk-backend.onrender.com"
 export let EndPoint = end_point  
 

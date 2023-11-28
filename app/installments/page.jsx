@@ -23,7 +23,7 @@ import {FunGet} from 'funuicss/js/Fun'
 import Loader from "@/components/Loader"
 import Axios  from 'axios'
 import SaleModal from '@/components/Sale'
-
+import Alert from 'funuicss/ui/alert/Alert'
 export default function Staffs() {
   const [err, seterr] = useState("")
   const [docs, setdocs] = useState('')
@@ -32,15 +32,16 @@ export default function Staffs() {
   const [installmentModal, setinstallmentModal] = useState(false)
   const [doc, setdoc] = useState("")
   const [modal_type, setmodal_type] = useState("")
-
+  const [success, setsuccess] = useState("")
   useEffect(() => {
-  setTimeout(() => {
-    seterr(false)
-  }, 5000);
-
-  return clearTimeout()
-  }, [err])
+    setTimeout(() => {
+      seterr(false)
+      setsuccess(false)
+    }, 5000);
   
+    return clearTimeout()
+    }, [err , success])
+
   const GetStaffs = () => {
     setloading(true)
     GetRequest("/all/installments")
@@ -113,6 +114,7 @@ export default function Staffs() {
         if(data.status == "ok"){
           setdoc("")
           setdocs("")
+          setsuccess("Payment made successfully by " + doc.customer.full_name)
         }else{
           seterr(data.message)
         }
@@ -128,7 +130,7 @@ export default function Staffs() {
   }
   return (
     <div>
-
+     {success && <Alert message={success} type="success" fixed="top-right" />}
       {loading && <Loader />}
       <SaleModal 
       close={<CloseModal onClick={() => setinstallmentModal(false)} />}
