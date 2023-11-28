@@ -127,7 +127,7 @@ export default function SaleModal({footer, doc , open , modal_type, paybtn, clos
                {
                 doc &&
                 doc.products.map( res => (
-                    <TableRow>
+                    <TableRow key={res._id}>
              <TableData>{res.product.name}</TableData>
              <TableData>{res.number}</TableData>
              <TableData>{res.quantity}</TableData>
@@ -196,7 +196,7 @@ export default function SaleModal({footer, doc , open , modal_type, paybtn, clos
                {
                 doc &&
                 doc.payment.history.map( res => (
-                    <TableRow>
+                    <TableRow key={res._id}>
              <TableData>{res.amount}</TableData>
              <TableData>{res.analytics.date}</TableData>
              <TableData>{res.analytics.time}</TableData>

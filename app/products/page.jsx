@@ -362,7 +362,7 @@ onClick={()=> Submit()}
         {
           docs &&
           docs.map(res => (
-            <TableRow>
+            <TableRow key={res._id}>
             <TableData>{res.number}</TableData>
             <TableData>{res.product.name}</TableData>
            <TableData>{res.price}</TableData>

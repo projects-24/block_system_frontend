@@ -265,7 +265,7 @@ body={
           { 
                 sell_doc &&
                 sell_doc.map(doc => (
-                    <TableRow>
+                    <TableRow key={res._id}>
                       <TableData>{doc.product.name}</TableData>
                       <TableData>{doc.price}</TableData>
                       <TableData>
