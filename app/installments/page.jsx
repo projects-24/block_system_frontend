@@ -33,6 +33,9 @@ export default function Staffs() {
   const [doc, setdoc] = useState("")
   const [modal_type, setmodal_type] = useState("")
   const [success, setsuccess] = useState("")
+
+  const [filter, setfilter] = useState('')
+
   useEffect(() => {
     setTimeout(() => {
       seterr(false)
@@ -285,7 +288,7 @@ onClick={()=> Submit()}
       
       {err && <ErrorAlert message={err} />}
 
-        <NavBar active={4} />
+        <NavBar active={3} />
         <Content>
             <Header 
             title={"Installments"} 
@@ -301,7 +304,7 @@ onClick={()=> Submit()}
     <RowFlex gap={1} justify="space-between" funcss="bb padding-bottom-20">
         <div>
         <Text text="Search" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
-        <Input bordered rounded />
+        <Input bordered rounded onChange={ (e) => setfilter(e.target.value) } />
         </div>
         <div>
         <Button raised bg={"primary"} rounded  text={"Print Docs"} startIcon={<PiPrinter />} /> 
@@ -317,7 +320,7 @@ onClick={()=> Submit()}
          <TableData>customer </TableData>
          <TableData>Price </TableData>
          <TableData>Quantity </TableData>
-         <TableData>customer contact</TableData>
+         <TableData>Contact</TableData>
          <TableData>Total Amount</TableData>
          <TableData>Amount Payed</TableData>
          <TableData>Sold By</TableData>
@@ -330,7 +333,23 @@ onClick={()=> Submit()}
            <>
            {
             docs && 
-            docs.map(res => (
+            docs
+            .filter(fdoc => {
+              if(filter){
+
+                if(
+                  filter.toString().trim().toLowerCase().includes(fdoc.customer.full_name.toString().toLowerCase().trim().slice(0 , filter.toString().trim().length))
+                  ||
+                  filter.toString().trim().toLowerCase().includes(fdoc.customer.contact.toString().toLowerCase().trim().slice(0 , filter.toString().trim().length))
+                  ){
+                    return fdoc
+                  }
+
+              }else{
+                return docs
+              }
+            })
+            .map(res => (
                 <TableRow key={res._id}>
                     <TableData>
                     {res.customer.full_name}

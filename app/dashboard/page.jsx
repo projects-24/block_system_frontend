@@ -32,12 +32,15 @@ export default function Dashboard() {
     const [err, seterr] = useState("")
     const [loading, setloading] = useState(false)
     const [monthly, setmonthly] = useState("")
+    const [yearly, setyearly] = useState("")
     const [start_interval, setstart_interval] = useState("")
     const [end_interval, setend_interval] = useState("")
     const [daily, setdaily] = useState("")
     const [installmentModal, setinstallmentModal] = useState(false)
     const [doc, setdoc] = useState("")
     const [modal_type, setmodal_type] = useState("")
+    
+
     useEffect(() => {
         setTimeout(() => {
           seterr(false)
@@ -81,6 +84,18 @@ export default function Dashboard() {
           }else{
             seterr("Select the specific date")
           }
+        }else if(query_type == "monthly"){
+           let month_and_year = monthly 
+           let _year = month_and_year.slice(0 , month_and_year.indexOf("-"))
+           let _month = month_and_year.slice(-2)
+           GetData(`/monthly/${parseInt(_month)}/${parseInt(_year)}`)
+        
+        }else if(query_type == "yearly"){
+            if(yearly.toString().length != 4){
+                seterr("Make sure to enter a valid year")
+            }else{
+                GetData(`/yearly/${yearly}`)
+            }
         }
     }
   return (
@@ -180,9 +195,10 @@ export default function Dashboard() {
                                         <div>
                                               <Text text="Year *" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
                                              <Input 
-                                        type="month" 
+                                        type="number" 
                                         bordered 
-                                        rounded
+                                        rounded 
+                                        onChange={(e) => setyearly(e.target.value) }
                                         /> 
                                         </div>
                                         : ''
@@ -235,7 +251,7 @@ bold
            <RowFlex gap={1} funcss='padding-20'>
            <Button text={<PiUsersDuotone size={20} />} bg='primary' raised height="3rem" width='3rem' />
            <Div>
-           <Text text='Total Sales' size='small' color='dark400' block bold/>
+           <Text text='Total Quantity ' size='small' color='dark400' block bold/>
            <RowFlex gap={0.5}>
            <Text heading='h3' text={docs ? docs.overall_quantity : "..."} color='dark200' />
            <Button 
@@ -306,7 +322,7 @@ bold
     <RowFlex gap={1} justify="space-between" funcss="bb padding-bottom-20">
         <div>
         <Text text="Search" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
-        <Input bordered rounded />
+        <Input bordered rounded onChange={ (e) => setfilter(e.target.value) } />
         </div>
         <div>
         <Button raised bg={"primary"} rounded  text={"Print Docs"} startIcon={<PiPrinter />} /> 
@@ -333,7 +349,23 @@ bold
            <>
            {
             docs && 
-            docs.data.map(res => (
+            docs.data
+            .filter(fdoc => {
+                if(filter){
+  
+                  if(
+                    filter.toString().trim().toLowerCase().includes(fdoc.customer.full_name.toString().toLowerCase().trim().slice(0 , filter.toString().trim().length))
+                    ||
+                    filter.toString().trim().toLowerCase().includes(fdoc.customer.contact.toString().toLowerCase().trim().slice(0 , filter.toString().trim().length))
+                    ){
+                      return fdoc
+                    }
+  
+                }else{
+                  return docs
+                }
+              })
+              .map(res => (
                 <TableRow key={res._id}>
                    <TableData>
                     {res.customer.full_name}

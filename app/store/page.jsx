@@ -265,7 +265,7 @@ body={
           { 
                 sell_doc &&
                 sell_doc.map(doc => (
-                    <TableRow key={res._id}>
+                    <TableRow key={doc._id}>
                       <TableData>{doc.product.name}</TableData>
                       <TableData>{doc.price}</TableData>
                       <TableData>
@@ -403,11 +403,12 @@ onClick={()=> Submit()}
             sub_dir={"Dashboard"}
             sub_dir_route={"/dashboard"}
             />
-            {
+          <Div minHeight='90vh'>
+          {
               docs &&
               
               <RowFlex gap={1} justify='space-between' >
-       <Col>
+       <div className='width-100-p'>
        <Multiselect
        
 options={docs} // Options to display in the dropdown
@@ -416,22 +417,24 @@ onSelect={(selectedList, selectedItem) => setsell_doc(selectedList)} // Function
 // onRemove={this.onRemove} // Function will trigger on remove event
 displayValue="product_name" // Property name to display in the dropdown options
 />
-       </Col>
-       <Col>
+       </div>
+       <div style={{width:"150px"}}>
           <Button
           bg='primary'
           raised
           funcss='text-bold'
+          fullWidth
           startIcon={<PiStorefront size={20} />}
-          text={`${sell_doc ? sell_doc.length : ''} View Cart`}
+          text={`View Cart`}
           onClick={() => {
           setmodal(true)
           } }
           />
-               </Col>
+               </div>
               </RowFlex>
           
             }
+          </Div>
            
         </Content>
     </div>
