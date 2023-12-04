@@ -30,7 +30,6 @@ useEffect(() => {
    }, [message])
 
 const Submit = () => {
-   setmessage("")
    let email , password 
    email = FunGet.val("#email")
    password = FunGet.val("#password")
