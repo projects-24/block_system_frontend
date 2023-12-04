@@ -140,7 +140,7 @@ export default function Products() {
   const HandleDelete = (id) => {
     setloading(true)
     setmodal2(false)
-    Axios.delete(EndPoint + "/delete/" + id)
+    Axios.delete(EndPoint + "/delete/product/" + id)
     .then( res => {
       setloading(false)
       if(res.data.status == "ok"){
