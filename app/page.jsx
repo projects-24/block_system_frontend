@@ -11,7 +11,7 @@ import IconicInput from 'funuicss/ui/input/Iconic'
 import RowFlex from "funuicss/ui/specials/RowFlex"
 import Alert from "funuicss/ui/alert/Alert"
 import Link from 'next/link'
-import { useState , useEffect } from 'react'
+import { useState  } from 'react'
 import {FunGet} from "funuicss/js/Fun"
 import { LoginAccount } from '@/default/Functions'
 import Loader from '@/components/Loader'
