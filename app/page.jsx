@@ -81,7 +81,7 @@ return (
 </Section>
 {
    message &&
-   <Alert message={message} raised type="warning" fullWidth/>
+   <Alert message={message}  type="danger"  fixed='top-right'/>
 }
 
 <Section gap={2} />
