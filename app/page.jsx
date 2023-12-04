@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import Div from 'funuicss/ui/div/Div'
 import Section from 'funuicss/ui/specials/Section'
 import Text from 'funuicss/ui/text/Text'
@@ -11,7 +11,7 @@ import IconicInput from 'funuicss/ui/input/Iconic'
 import RowFlex from "funuicss/ui/specials/RowFlex"
 import Alert from "funuicss/ui/alert/Alert"
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 import {FunGet} from "funuicss/js/Fun"
 import { LoginAccount } from '@/default/Functions'
 import Loader from '@/components/Loader'
@@ -20,6 +20,14 @@ import Loader from '@/components/Loader'
 export default function App() { 
 const [message, setmessage] = useState("")
 const [loading, setloading] = useState("")
+
+useEffect(() => {
+   setTimeout(() => {
+     setmessage(false)
+   }, 5000);
+ 
+   return clearTimeout()
+   }, [message])
 
 const Submit = () => {
    setmessage("")
