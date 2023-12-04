@@ -35,6 +35,8 @@ export default function NavBar({active}) {
       <div>
       <div className='padding-20'>
             <AppBar
+            fixedTop
+            funcss="card transparent"
           left = {
            <Image src="/logo.png" width={60} height={60}/>
           }

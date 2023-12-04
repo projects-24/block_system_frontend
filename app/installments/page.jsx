@@ -307,7 +307,7 @@ onClick={()=> Submit()}
         <Input bordered rounded onChange={ (e) => setfilter(e.target.value) } />
         </div>
         <div>
-        <Button raised bg={"primary"} rounded  text={"Print Docs"} startIcon={<PiPrinter />} /> 
+        {/* <Button raised bg={"primary"} rounded  text={"Print Docs"} startIcon={<PiPrinter />} />  */}
         </div>
     </RowFlex>
     </>}
