@@ -68,7 +68,7 @@ export const LoginAccount = (email , password) => {
             if(res.data.status == "ok"){
                 SaveToken(res.data.data , "gdggd553$$6738838303jjdd")
                 .then(() => {
-                  resolve()
+                  resolve(res.data.data.role)
                 })
             }else{
                 reject(res.data)

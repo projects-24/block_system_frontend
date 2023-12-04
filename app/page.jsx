@@ -37,8 +37,12 @@ const Submit = () => {
    if(email && password){
       setloading(true)
       LoginAccount(email , password)
-      .then( () => {
+      .then( (role) => {
+        if(role == "admin"){
          window.location.assign("/dashboard")
+        }else{
+         window.location.assign("/store")
+        }
       } )
       .catch(err => {
          setmessage(err.message)
