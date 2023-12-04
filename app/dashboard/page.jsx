@@ -14,7 +14,7 @@ import {PiArrowDown, PiArrowUp, PiCursorClickDuotone,  PiEye,  PiMoney,  PiPrint
 import Button from 'funuicss/ui/button/Button'
 import Input from 'funuicss/ui/input/Input'
 import Axios from "axios";
-import {EndPoint} from "../../default/Functions"
+import {EndPoint, OnlyAdmin} from "../../default/Functions"
 import Alert from "funuicss/ui/alert/Alert"
 import Loader from "@/components/Loader"
 import Table from 'funuicss/ui/table/Table'
@@ -40,6 +40,12 @@ export default function Dashboard() {
     const [doc, setdoc] = useState("")
     const [modal_type, setmodal_type] = useState("")
     const [sort_data, setsort_data] = useState("")
+
+    const [user, setuser] = useState("")
+    
+    useEffect(() => {
+     OnlyAdmin()
+    }, [])
     
 
     useEffect(() => {

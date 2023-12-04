@@ -112,3 +112,13 @@ export const GetRequest = (route) => {
     .catch( err => reject(err) )
 
 }
+
+
+export const OnlyAdmin = () => {
+    GetToken()
+    .then( res => {
+    if(res.user.role != "admin"){
+        window.location.assign("/unauthorized")
+    }
+    } )
+}

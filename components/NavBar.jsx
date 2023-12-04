@@ -20,13 +20,16 @@ import DropItem from 'funuicss/ui/drop/Item'
 import DropMenu from 'funuicss/ui/drop/Menu'
 import { PiCaretDown, PiUser } from "react-icons/pi";
 import { GetToken, SignOut } from "@/default/Functions";
+import Circle from "funuicss/ui/specials/Circle";
 
 export default function NavBar({active}) {
   const [user, setuser] = useState("")
+  const [isAdmin, setisAdmin] = useState(false)
   useEffect(() => {
    GetToken()
    .then( res => {
     setuser(res.user)
+    setisAdmin( res.user.role == "admin" ? true  : false)
    } )
   }, [])
   
@@ -36,9 +39,11 @@ export default function NavBar({active}) {
       <div className='padding-20'>
             <AppBar
             fixedTop
-            funcss="card transparent"
+            funcss="card transparent height-70"
           left = {
-           <Image src="/logo.png" width={60} height={60}/>
+           <Circle size={3.5} bg="dark800">
+            <Image src="/logo.png" width={50} height={50}/>
+           </Circle>
           }
       
           right={
@@ -65,21 +70,25 @@ export default function NavBar({active}) {
         </div>
       
         <div className="_sidebar">
+        
       <List gap={0.2}>
       
-      <ListItem>
-          <Link href="/dashboard">
-              <Button
-              fullWidth 
-              funcss={`_sidelink ${active == 0 ? "card" : ''}`}
-              text="Dashboard"
-              startIcon={
-              <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
-                  <SiGoogleanalytics className="text-primary" />
-              </Div>}
-              />
-          </Link>
-      </ListItem>
+  {
+    isAdmin &&
+    <ListItem>
+    <Link href="/dashboard">
+        <Button
+        fullWidth 
+        funcss={`_sidelink ${active == 0 ? "card" : ''}`}
+        text="Dashboard"
+        startIcon={
+        <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
+            <SiGoogleanalytics className="text-primary" />
+        </Div>}
+        />
+    </Link>
+</ListItem>
+  }
       <ListItem>
           <Link href="/store">
               <Button
@@ -93,19 +102,22 @@ export default function NavBar({active}) {
               />
           </Link>
       </ListItem>
-      <ListItem>
-          <Link href="/products">
-              <Button
-              fullWidth 
-              funcss={`_sidelink ${active == 2 ? "card" : ''}`}
-              text="Products"
-              startIcon={
-              <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
-                  <AiFillAppstore className="text-primary" />
-              </Div>}
-              />
-          </Link>
-      </ListItem>
+      {
+        isAdmin &&
+        <ListItem>
+        <Link href="/products">
+            <Button
+            fullWidth 
+            funcss={`_sidelink ${active == 2 ? "card" : ''}`}
+            text="Products"
+            startIcon={
+            <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
+                <AiFillAppstore className="text-primary" />
+            </Div>}
+            />
+        </Link>
+    </ListItem>
+      }
       <ListItem>
           <Link href="/installments">
               <Button
@@ -136,17 +148,17 @@ export default function NavBar({active}) {
       
       </List>
 
-      <Section gap={2}/>
+      <Section gap={4}/>
 
       <Button
       fullWidth 
-       text="Log Out" small  
+       text="Log Out"   
        raised 
-       bg="error200" 
-       funcss='text-error900 text-bold' 
+       bg="error" 
+       funcss='text-bold' 
        onClick={() => SignOut()}
        rounded
-       endIcon={<IoMdLogOut />}  />
+       />
 
         </div>
       </div>
