@@ -39,6 +39,7 @@ export default function Dashboard() {
     const [installmentModal, setinstallmentModal] = useState(false)
     const [doc, setdoc] = useState("")
     const [modal_type, setmodal_type] = useState("")
+    const [sort_data, setsort_data] = useState("")
     
 
     useEffect(() => {
@@ -98,6 +99,35 @@ export default function Dashboard() {
             }
         }
     }
+
+    const [print, setprint] = useState("")
+  
+    const HandlePrint = ()=>{
+      new Promise((resolve, reject) => {
+      setprint(true)
+        resolve()
+      })
+      .then(()=>{
+        new Promise((resolve, reject) => {
+          const myElement = document.getElementById('print_document');
+          printElement(myElement);
+          function printElement(element) {
+              const originalContents = document.body.innerHTML;
+              const printContents = element.innerHTML;
+        
+              document.body.innerHTML = printContents;
+              window.print();
+        
+              document.body.innerHTML = originalContents;
+        
+          }
+          resolve()
+        }).then(()=>{
+        //   window.location.reload()
+        })
+      })
+    }
+
   return (
     <div>
         <NavBar active={0}/>
@@ -321,16 +351,35 @@ bold
     header={<>
     <RowFlex gap={1} justify="space-between" funcss="bb padding-bottom-20">
         <div>
-        <Text text="Search" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
+            <RowFlex gap={0.5}>
+                <div>
+                <Text text="Search" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
         <Input bordered rounded onChange={ (e) => setfilter(e.target.value) } />
+                </div>
+                <div>
+                <Text text="Filter" funcss="margin-bottom-10"  block size="small" bold color="primary"/>
+        <Input
+        select
+        options={[
+            {text:"Filter Data" , value:""},
+            {text:"All" , value:"all"},
+            {text:"Cash" , value:"cash"},
+            {text:"Installment" , value:"installment"}
+        ]}
+         bordered rounded onChange={ (e) => setsort_data(e.target.value) } />
+                </div>
+            </RowFlex>
         </div>
         <div>
-        {/* <Button raised bg={"primary"} rounded  text={"Print Docs"} startIcon={<PiPrinter />} />  */}
+        <Button raised bg={"primary"} rounded onClick={HandlePrint}  text={"Print Docs"} startIcon={<PiPrinter />} /> 
         </div>
     </RowFlex>
     </>}
      funcss="padding-20"
      >
+
+     <div id="print_document">
+
     <Table
     funcss="text-small"
     stripped
@@ -343,13 +392,29 @@ bold
          <TableData>Sold By</TableData>
          <TableData>Date</TableData>
          <TableData>Time</TableData>
+         {
+            print ? 
+            ""
+            : 
          <TableData>View</TableData>
+
+         }
        </>}
        body={
            <>
            {
             docs && 
             docs.data
+            .filter(sort_filt => {
+                if(sort_data == "all" || sort_data == ""){
+                    return docs 
+
+                }else if (sort_data == "cash" && sort_filt.payment.method == "cash"){
+                    return sort_filt
+                }else if (sort_data == "installment" && sort_filt.payment.method == "installment"){
+                    return sort_filt
+                }
+            } )
             .filter(fdoc => {
                 if(filter){
   
@@ -405,6 +470,9 @@ bold
                 <TableData>
                     {res.analytics.time}
                 </TableData>
+             {
+                print ? 
+                "" :
                 <TableData>
                 <Button
                    text="View"
@@ -419,6 +487,7 @@ bold
                    startIcon={<PiEye />}
                    />
                 </TableData>
+             }
               </TableRow>
             ))
            }
@@ -426,6 +495,8 @@ bold
        }
 
 />
+</div>
+
     </Card>
     </Section>
 }

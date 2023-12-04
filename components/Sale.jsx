@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Modal from 'funuicss/ui/modal/Modal'
 
 import Button from 'funuicss/ui/button/Button'
@@ -6,7 +6,7 @@ import RowFlex from 'funuicss/ui/specials/RowFlex'
 import Section from 'funuicss/ui/specials/Section'
 import Text from 'funuicss/ui/text/Text'
 import Input from 'funuicss/ui/input/Input'
-import { PiCheck , PiX } from 'react-icons/pi'
+import { PiCheck , PiPrinter, PiX } from 'react-icons/pi'
 import Table from 'funuicss/ui/table/Table'
 import TableData from 'funuicss/ui/table/Data'
 import TableRow from 'funuicss/ui/table/Row'
@@ -87,14 +87,41 @@ export default function SaleModal({footer, doc , open , modal_type, paybtn, clos
     //     },
     //     "payment_method": "installment"
     //   }
+
+    const [print, setprint] = useState("")
   
+    const HandlePrint = ()=>{
+      new Promise((resolve, reject) => {
+      setprint(true)
+        resolve()
+      })
+      .then(()=>{
+        new Promise((resolve, reject) => {
+          const myElement = document.getElementById('print_document');
+          printElement(myElement);
+          function printElement(element) {
+              const originalContents = document.body.innerHTML;
+              const printContents = element.innerHTML;
+        
+              document.body.innerHTML = printContents;
+              window.print();
+        
+              document.body.innerHTML = originalContents;
+        
+          }
+          resolve()
+        }).then(()=>{
+          window.location.reload()
+        })
+      })
+    }
 
     if (doc){
       return (
         <div>
   
         <Modal 
-        id='modal2'
+        id=''
         animation="ScaleUp" 
         duration={0.4} 
         open={open}
@@ -108,7 +135,7 @@ export default function SaleModal({footer, doc , open , modal_type, paybtn, clos
             </div>
         }
         body={
-            <div className='container'>
+            <div className='container' id='print_document'>
     
                 <Section  gap={2}>
                 <Text text="Products" funcss="margin-bottom-10" block size="small" bold color="primary"/>
@@ -223,6 +250,20 @@ export default function SaleModal({footer, doc , open , modal_type, paybtn, clos
         <div className='container'>
             {
       paybtn && modal_type == "pay" && paybtn 
+    }
+    {
+      modal_type != "pay" ?
+      <div>
+        <Button
+        text='Print Document'
+        raised 
+        bg="primary"
+        startIcon={<PiPrinter />}
+        onClick={HandlePrint}
+        />
+      </div>
+        :""
+
     }
         
         </div>}
