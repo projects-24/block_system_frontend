@@ -131,19 +131,22 @@ export default function NavBar({active}) {
               />
           </Link>
       </ListItem>
-      <ListItem>
-          <Link href="/staff">
-              <Button
-              fullWidth 
-              funcss={`_sidelink ${active == 4 ? "card" : ''}`}
-              text="Staff"
-              startIcon={
-              <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
-                  <HiUsers className="text-primary" />
-              </Div>}
-              />
-          </Link>
-      </ListItem>
+  {
+    isAdmin &&
+    <ListItem>
+    <Link href="/staff">
+        <Button
+        fullWidth 
+        funcss={`_sidelink ${active == 4 ? "card" : ''}`}
+        text="Staff"
+        startIcon={
+        <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
+            <HiUsers className="text-primary" />
+        </Div>}
+        />
+    </Link>
+</ListItem>
+  }
       
       
       </List>
