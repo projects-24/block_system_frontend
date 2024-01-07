@@ -1469,14 +1469,14 @@ functions-have-names@^1.2.3:
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
 funuicss@^1.11.10:
-  version "1.11.13"
-  resolved "https://registry.npmjs.org/funuicss/-/funuicss-1.11.13.tgz"
-  integrity sha512-gXbrq8Ei1s/lY/XxzUNT6L6PwNmE9cmeDt32jrnE1J74XpKagHlbs2JVl3Gwu6lLQIoB2t5KwvkgDF4ppTXS+w==
+  version "1.11.17"
+  resolved "https://registry.npmjs.org/funuicss/-/funuicss-1.11.17.tgz"
+  integrity sha512-MONW89kFej0AQZZ/DtLqaee/b96A38IBPFdkDYKgR9JEdFECl6+qNoedtWrcpv4ekPO2CkCGJ5InSH2lfv75DA==
   dependencies:
     next "^13.3.1"
     react-icons "^4.11.0"
     tsc "^2.0.4"
-    typescript "^5.3.2"
+    typescript "^5.3.3"
 
 gauge@^5.0.0:
   version "5.0.1"
@@ -3527,10 +3527,10 @@ typed-array-length@^1.0.4:
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
 
-typescript@^5.3.2, typescript@>=3.3.1, typescript@>=4.2.0:
-  version "5.3.2"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-5.3.2.tgz"
-  integrity sha512-6l+RyNy7oAHDfxC4FzSJcz9vnjTKxrLpDG5M2Vu4SHRVNg6xzqZp6LYSR9zjqQTu8DU/f5xwxUdADOkbrIX2gQ==
+typescript@^5.3.3, typescript@>=3.3.1, typescript@>=4.2.0:
+  version "5.3.3"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-5.3.3.tgz"
+  integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

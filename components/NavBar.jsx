@@ -1,6 +1,6 @@
 'use client'
 import { HiUsers } from "react-icons/hi"; 
-import { AiFillAppstore, AiFillMoneyCollect } from "react-icons/ai"; 
+import { AiFillAppstore, AiFillDatabase, AiFillMoneyCollect } from "react-icons/ai"; 
 import { FaStoreAlt } from "react-icons/fa"; 
 import { SiGoogleanalytics } from "react-icons/si"; 
 import { IoMdLogOut } from "react-icons/io"; 
@@ -118,6 +118,22 @@ export default function NavBar({active}) {
         </Link>
     </ListItem>
       }
+      {
+        isAdmin &&
+        <ListItem>
+        <Link href="/inputs">
+            <Button
+            fullWidth 
+            funcss={`_sidelink ${active == 5 ? "card" : ''}`}
+            text="Inputs"
+            startIcon={
+            <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
+                <AiFillDatabase className="text-primary" />
+            </Div>}
+            />
+        </Link>
+    </ListItem>
+      }
       <ListItem>
           <Link href="/installments">
               <Button
@@ -151,7 +167,7 @@ export default function NavBar({active}) {
       
       </List>
 
-      <Section gap={4}/>
+      <Section gap={2}/>
 
       <Button
       fullWidth 
@@ -160,7 +176,6 @@ export default function NavBar({active}) {
        bg="error" 
        funcss='text-bold' 
        onClick={() => SignOut()}
-       rounded
        />
 
         </div>
