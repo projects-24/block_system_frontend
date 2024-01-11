@@ -155,8 +155,8 @@ export default function Products() {
   return (
     <div>
 <Modal 
-animation="Opacity" 
-duration={1} 
+animation="SlideDown" 
+duration={0.2} 
 open={modal2}
 maxWidth="500px"
 title={
@@ -313,6 +313,7 @@ footer={
        <Button 
 bg="error"
 text="Cancel"
+raised
 rounded
 onClick={()=>setmodal(false)}
 />
@@ -382,7 +383,7 @@ onClick={()=> Submit()}
             <TableRow key={res._id}>
             <TableData>{res.number}</TableData>
             <TableData>{res.name}</TableData>
-           <TableData>{res.quantity}</TableData>
+           <TableData> <Text bold color="primary" text={<>{res.quantity} {res.measurement}</>} /> </TableData>
            <TableData>
             {
             res.in_stock ? <span className='success text-smaller raised padding-5 width-80 block  text-center round-edge'> In Stock </span>

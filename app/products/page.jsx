@@ -24,7 +24,7 @@ import Loader from "@/components/Loader"
 import Axios  from 'axios'
 import Circle from "funuicss/ui/specials/Circle"
 import Div from 'funuicss/ui/div/Div'
-
+import Multiselect from 'multiselect-react-dropdown';
 export default function Products() {
   const [err, seterr] = useState("")
   const [docs, setdocs] = useState('')
@@ -33,6 +33,8 @@ export default function Products() {
   const [modal, setmodal] = useState(false)
   const [modal2, setmodal2] = useState(false)
   const [delete_doc, setdelete_doc] = useState("")
+  const [inputs, setinputs] = useState([])
+  const [all_inputs, setall_inputs] = useState("")
 
   const [user, setuser] = useState("")
   useEffect(() => {
@@ -52,18 +54,47 @@ export default function Products() {
   return clearTimeout()
   }, [err])
   
+  useEffect(() => {
+  if(!all_inputs){
+    GetRequest("/inputs/in_stock")
+    .then(res => {
+      if(res.status == "ok"){
+        let store_inputs = res.data
+        // Function to add the "quantity" field to each product
+function addQuantityToInputs(store_inputs) {
+  for (const product of store_inputs) {
+    // You can set the quantity to any value you desire, for example, 1.
+    product.quantity = 1;
+  }
+}
+
+// Call the function to add the "quantity" field
+addQuantityToInputs(store_inputs);
+
+setall_inputs(store_inputs)
+
+
+      }else{
+        seterr(res.message)
+      }
+    })
+  }
+  })
+  
   const GetProducts = () => {
     setloading(true)
     GetRequest("/all/products")
     .then(res => {
       setdocs(res.data)
       setloading(false)
+
     })
     .catch( err => {
       setloading(false)
       seterr(err.message)
     } )
   }
+
   useEffect(() => {
    if(!docs){
     GetProducts()
@@ -72,10 +103,11 @@ export default function Products() {
 
 
   const Submit = () => {
-    let name, number , price, description
+    let name, quantity , price, description
     name = FunGet.val("#name")
     price = FunGet.val("#price")
     description = FunGet.val("#description")
+    quantity = FunGet.val("#quantity")
     status = FunGet.val("#status")
 
     const doc = {
@@ -86,7 +118,20 @@ export default function Products() {
         status
       },
       price,
-      staff:user
+      staff:user ,
+      inputs ,
+      quantity
+    }
+    const update_doc = {
+      product:{
+        name ,
+        price,
+        description ,
+        status
+      },
+      price,
+      inputs ,
+      quantity
     }
    
     if(
@@ -98,8 +143,7 @@ export default function Products() {
       setmodal(false)
 
       if(udoc){
-     
-      Axios.patch(EndPoint + "/update/product/" + udoc._id, doc)
+      Axios.patch(EndPoint + "/update/product/" + udoc._id, update_doc)
       .then( res => {
         setudoc("")
         setloading(false)
@@ -115,7 +159,6 @@ export default function Products() {
         seterr(err.message)
       } )
       }else{
-        
       Axios.post(EndPoint + "/new/product", doc)
       .then( res => {
         setloading(false)
@@ -158,8 +201,8 @@ export default function Products() {
   return (
     <div>
 <Modal 
-animation="Opacity" 
-duration={1} 
+animation="SlideDown" 
+duration={0.2} 
 open={modal2}
 maxWidth="500px"
 title={
@@ -208,20 +251,28 @@ footer={
       {loading && <Loader />}
 
 <Modal 
-animation="ScaleUp" 
+animation="SlideRight" 
 duration={0.4} 
 open={modal}
-backdrop
-maxWidth="500px"
-title={<Text text={udoc ? udoc.product.name : "New Product"} heading='h4' funcss='padding' block/>}
+position='left'
+maxWidth="700px"
+title={
+  <div className='container'>
+    <Text text={udoc ? udoc.product.name : "New Product"} heading='h4' funcss='padding' block/>
+  </div>
+}
 body={
-  <div>
+  <div className='container'>
+      <Section gap={2} />
+      
       <RowFlex gap={1}>
         <Col>
         <Text 
         text='Product Name*'
         size='small'
         color='primary'
+        funcss="margin-bottom-10"
+        block
         bold
         />
          <Input
@@ -236,6 +287,8 @@ body={
         text='Price*'
         size='small'
         color='primary'
+        funcss="margin-bottom-10"
+        block
         bold
         />
          <Input
@@ -253,6 +306,8 @@ body={
         text='Description*'
         size='small'
         color='primary'
+        funcss="margin-bottom-10"
+        block
         bold
         />
          <Input
@@ -266,12 +321,102 @@ body={
         </Col>
       <Section />
         <Col>
+   
+
+
+{
+  all_inputs && !udoc &&
+<>
+<Text 
+  text='Inputs*'
+  size='small'
+  color='primary'
+  funcss="margin-bottom-10"
+  block
+  bold
+  />
+  <Multiselect
+options={all_inputs}
+onSelect={(selectedList, selectedItem) =>  {
+  new Promise((resolve, reject) => {
+    setinputs([])
+    resolve()
+  })
+  .then(() => setinputs(selectedList) )
+}} 
+displayValue="name" 
+/>
+</>
+}
+<Section gap={2}/>
+{
+        inputs && 
+        <Table 
+       funcss='text-small'
+       stripped
+       head={<>
+    <TableData>Input</TableData>
+         <TableData>Quantity</TableData>
+         <TableData>Unit</TableData>
+       </>}
+       body={
+           <>
+          { 
+                inputs &&
+                inputs.map(doc => (
+                    <TableRow key={doc._id}>
+                      <TableData>{doc.name}</TableData>
+                      <TableData>
+                        <Input 
+                        type='number' 
+                        defaultValue={doc.quantity} 
+                        label='Quantity' 
+                        bordered
+                        onChange={(e) => {
+                          let quantity = e.target.value
+                         // Function to update the quantity value based on _id
+function updateQuantityById(_id, newQuantity) {
+  const InputToUpdate = inputs.find(product => product._id === _id);
+
+  if (InputToUpdate) {
+    // Update the quantity value
+    InputToUpdate.quantity = newQuantity;
+  } else {
+    console.log(`Product with _id ${_id} not found.`);
+  }
+}
+
+// Example: Update quantity for a specific product
+updateQuantityById(doc._id, quantity);
+                       
+                        }}
+                        />
+                      </TableData>
+                      <TableData>{doc.measurement}</TableData>
+                  </TableRow>
+                    ) )
+          }
+           </>
+       }
+       >
+
+
+ </Table>
+     }
+        </Col>
+      <Section gap={2} />
+      <RowFlex gap={1}>
+      <Col>
         <Text 
         text='Availabilty*'
         size='small'
         color='primary'
+        funcss="margin-bottom-10"
+        block
         bold
         />
+
+
          <Input
          bordered 
          fullWidth
@@ -284,15 +429,35 @@ body={
          defaultValue={udoc ? udoc.product.status : ""}
          />
         </Col>
+        <Col>
+        <Text 
+        text='Quantity*'
+        size='small'
+        color='primary'
+        funcss="margin-bottom-10"
+        block
+        bold
+        />
+         <Input
+         bordered 
+         fullWidth
+         type='number'
+         id='quantity'
+         defaultValue={udoc ? udoc.price : ""}
+         />
+        </Col>
+      </RowFlex>
+
    
 
-    
+        <Section gap={2} />
 
          
 </div>
 }
 footer={
- <RowFlex justify='flex-end' gap={0.5} >
+<div className="container">
+<RowFlex justify='flex-end' gap={0.5} >
        <Button 
 bg="error"
 text="Cancel"
@@ -308,6 +473,7 @@ rounded
 onClick={()=> Submit()}
 />
  </RowFlex>
+</div>
 }
 />
       
@@ -375,6 +541,7 @@ onClick={()=> Submit()}
            <TableData>
             <span onClick={ () => {
               setudoc(res)
+              setinputs(res.inputs)
               setmodal(true)
             } }>
      <Circle  size={2} raised bg='success' >
