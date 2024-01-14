@@ -284,6 +284,7 @@ body={
          select
          options={[
             { text: "Grams", value: "g" },
+            { text: "Bag", value: "bag" },
             { text: "Kilograms", value: "kg" },
             { text: "Milligrams", value: "mg" },
             { text: "Micrograms", value: "µg" },
