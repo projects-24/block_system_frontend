@@ -34,6 +34,24 @@ export default function Products() {
   const [modal2, setmodal2] = useState(false)
   const [delete_doc, setdelete_doc] = useState("")
 
+  const [config, setconfig] = useState("")
+  
+
+  useEffect(() => {
+   if(!config){
+    GetRequest("/get/threshold")
+    .then(res => {
+      setconfig(res.data)
+      setloading(false)
+    })
+    .catch( err => {
+      setloading(false)
+      seterr(err.message)
+    } )
+   }
+  })
+
+
   const [user, setuser] = useState("")
   useEffect(() => {
   if(!user){
@@ -372,13 +390,14 @@ onClick={()=> Submit()}
          <TableData>Name</TableData>
          <TableData>Quantity</TableData>
          <TableData>Status</TableData>
+         <TableData>Threshold</TableData>
          <TableData>Update</TableData>
          <TableData>Delete</TableData>
        </>}
        body={
            <>
         {
-          docs &&
+          docs && config &&
           docs.map(res => (
             <TableRow key={res._id}>
             <TableData>{res.number}</TableData>
@@ -386,8 +405,24 @@ onClick={()=> Submit()}
            <TableData> <Text bold color="primary" text={<>{res.quantity} {res.measurement}</>} /> </TableData>
            <TableData>
             {
-            res.in_stock ? <span className='success text-smaller raised padding-5 width-80 block  text-center round-edge'> In Stock </span>
-          : <span className='error text-smaller raised padding-5 width-80 block  text-center round-edge'>Out Of Stock </span>
+            res.in_stock ?
+            <Circle bg="success" size={2}>
+            <PiCheck />
+          </Circle>
+          : <Circle bg="error" size={2}>
+          <PiX />
+        </Circle>
+          }
+          </TableData>
+           <TableData>
+           {
+            res.quantity > config.inputs  ? 
+            <Circle bg="success" size={2}>
+              <PiCheck />
+            </Circle>
+          :  <Circle bg="error" size={2}>
+          <PiX />
+        </Circle>
           }
           </TableData>
            <TableData>

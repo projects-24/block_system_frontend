@@ -14,7 +14,7 @@ import RowFlex from 'funuicss/ui/specials/RowFlex'
 import Section from 'funuicss/ui/specials/Section'
 import Text from 'funuicss/ui/text/Text'
 import Button from 'funuicss/ui/button/Button'
-import { PiCheck, PiEye, PiMoney, PiPlus, PiPrinter } from 'react-icons/pi'
+import { PiCheck, PiEye, PiMoney, PiPlus, PiPrinter, PiX } from 'react-icons/pi'
 import Modal from 'funuicss/ui/modal/Modal'
 import CloseModal from 'funuicss/ui/modal/Close'
 import Input from 'funuicss/ui/input/Input'
@@ -24,6 +24,7 @@ import Loader from "@/components/Loader"
 import Axios  from 'axios'
 import SaleModal from '@/components/Sale'
 import Alert from 'funuicss/ui/alert/Alert'
+import Circle from "funuicss/ui/specials/Circle"
 export default function Staffs() {
   const [err, seterr] = useState("")
   const [docs, setdocs] = useState('')
@@ -323,7 +324,7 @@ onClick={()=> Submit()}
          <TableData>Contact</TableData>
          <TableData>Total Amount</TableData>
          <TableData>Amount Payed</TableData>
-         <TableData>Sold By</TableData>
+         <TableData>Done</TableData>
          <TableData>Date</TableData>
          <TableData>Time</TableData>
          <TableData>View</TableData>
@@ -371,7 +372,14 @@ onClick={()=> Submit()}
                     {res.payment.amount_payed}
                 </TableData>
                 <TableData>
-                    {res.staff.username}
+                    {res.payment.done ?
+                      <Circle bg="success" size={2}>
+                      <PiCheck />
+                    </Circle>
+                  :  <Circle bg="error" size={2}>
+                  <PiX />
+                </Circle>
+                  }
                 </TableData>
                 <TableData>
                     {res.analytics.date}

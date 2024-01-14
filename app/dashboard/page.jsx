@@ -10,7 +10,7 @@ import Grid from 'funuicss/ui/grid/Grid'
 import Col from 'funuicss/ui/grid/Col'
 import Card from 'funuicss/ui/card/Card'
 import RowFlex from 'funuicss/ui/specials/RowFlex'
-import {PiArrowDown, PiArrowUp, PiCursorClickDuotone,  PiEye,  PiMoney,  PiPrinter,  PiUsersDuotone,  PiVoicemailDuotone} from 'react-icons/pi'
+import {PiArrowDown, PiArrowUp, PiCheck,  PiEye,  PiMoney,  PiPrinter,  PiUsersDuotone,  PiX} from 'react-icons/pi'
 import Button from 'funuicss/ui/button/Button'
 import Input from 'funuicss/ui/input/Input'
 import Axios from "axios";
@@ -23,7 +23,7 @@ import TableRow from 'funuicss/ui/table/Row'
 import Section from "funuicss/ui/specials/Section";
 import SaleModal from '@/components/Sale'
 import CloseModal from 'funuicss/ui/modal/Close'
-
+import Circle from "funuicss/ui/specials/Circle"
 export default function Dashboard() {
 
     const [query_type, setquery_type] = useState("")
@@ -396,6 +396,7 @@ bold
          <TableData>Contact</TableData>
          <TableData>Method</TableData>
          <TableData>Sold By</TableData>
+         <TableData>Done</TableData>
          <TableData>Date</TableData>
          <TableData>Time</TableData>
          {
@@ -469,6 +470,16 @@ bold
                 </TableData>
                 <TableData>
                     {res.staff.username}
+                </TableData>
+                <TableData>
+                    {res.payment.done ?
+                      <Circle bg="success" size={2}>
+                      <PiCheck />
+                    </Circle>
+                  :  <Circle bg="error" size={2}>
+                  <PiX />
+                </Circle>
+                  }
                 </TableData>
                 <TableData>
                     {res.analytics.date}

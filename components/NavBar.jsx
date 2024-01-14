@@ -1,7 +1,7 @@
 'use client'
 import { HiUsers } from "react-icons/hi"; 
 import { AiFillAppstore, AiFillDatabase, AiFillMoneyCollect } from "react-icons/ai"; 
-import { FaStoreAlt } from "react-icons/fa"; 
+import { FaCogs, FaStoreAlt } from "react-icons/fa"; 
 import { SiGoogleanalytics } from "react-icons/si"; 
 import { IoMdLogOut } from "react-icons/io"; 
 import React, { useEffect, useState } from 'react'
@@ -71,7 +71,7 @@ export default function NavBar({active}) {
       
         <div className="_sidebar">
         
-      <List gap={0.2}>
+      <List>
       
   {
     isAdmin &&
@@ -84,6 +84,22 @@ export default function NavBar({active}) {
         startIcon={
         <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
             <SiGoogleanalytics className="text-primary" />
+        </Div>}
+        />
+    </Link>
+</ListItem>
+  }
+  {
+    isAdmin &&
+    <ListItem>
+    <Link href="/config">
+        <Button
+        fullWidth 
+        funcss={`_sidelink ${active == 0.1 ? "card" : ''}`}
+        text="Configurations"
+        startIcon={
+        <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
+            <FaCogs className="text-primary" />
         </Div>}
         />
     </Link>

@@ -35,6 +35,23 @@ export default function Products() {
   const [delete_doc, setdelete_doc] = useState("")
   const [inputs, setinputs] = useState([])
   const [all_inputs, setall_inputs] = useState("")
+  const [config, setconfig] = useState("")
+  
+
+  useEffect(() => {
+   if(!config){
+    GetRequest("/get/threshold")
+    .then(res => {
+      setconfig(res.data)
+      setloading(false)
+    })
+    .catch( err => {
+      setloading(false)
+      seterr(err.message)
+    } )
+   }
+  })
+  
 
   const [user, setuser] = useState("")
   useEffect(() => {
@@ -443,7 +460,7 @@ updateQuantityById(doc._id, quantity);
          fullWidth
          type='number'
          id='quantity'
-         defaultValue={udoc ? udoc.price : ""}
+         defaultValue={udoc ? udoc.quantity : ""}
          />
         </Col>
       </RowFlex>
@@ -519,7 +536,9 @@ onClick={()=> Submit()}
     <TableData>No</TableData>
          <TableData>Name</TableData>
          <TableData>Price</TableData>
+         <TableData>Quantity</TableData>
          <TableData>Status</TableData>
+         <TableData>Threshold</TableData>
          <TableData>Update</TableData>
          <TableData>Delete</TableData>
        </>}
@@ -532,12 +551,30 @@ onClick={()=> Submit()}
             <TableData>{res.number}</TableData>
             <TableData>{res.product.name}</TableData>
            <TableData>{res.price}</TableData>
+           <TableData>{res.quantity}</TableData>
            <TableData>
             {
-            res.product.status  == "available" ? <span className='success text-smaller raised padding-5 width-80 block  text-center round-edge'> Availble </span>
-          : <span className='error text-smaller raised padding-5 width-80 block  text-center round-edge'>Not Availble </span>
+            res.product.status  == "available" ? 
+            <Circle bg="success" size={2}>
+              <PiCheck />
+            </Circle>
+          :  <Circle bg="error" size={2}>
+          <PiX />
+        </Circle>
           }
           </TableData>
+           <TableData>
+            {
+            res.quantity > config.products  ? 
+            <Circle bg="success" size={2}>
+              <PiCheck />
+            </Circle>
+          :  <Circle bg="error" size={2}>
+          <PiX />
+        </Circle>
+          }
+          </TableData>
+
            <TableData>
             <span onClick={ () => {
               setudoc(res)
