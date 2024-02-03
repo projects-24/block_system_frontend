@@ -13,13 +13,27 @@ import Alert from "funuicss/ui/alert/Alert"
 import Link from 'next/link'
 import { useState  } from 'react'
 import {FunGet} from "funuicss/js/Fun"
-import { LoginAccount } from '@/default/Functions'
+import { LoginAccount , EndPoint } from '@/default/Functions'
 import Loader from '@/components/Loader'
-
+import Circle from 'funuicss/ui/specials/Circle'
+import { PiX} from "react-icons/pi"
+import FunLoader from "funuicss/ui/loader/Loader"
+import Axios  from 'axios'
 
 export default function App() { 
 const [message, setmessage] = useState("")
 const [loading, setloading] = useState("")
+const [api_online, setapi_online] = useState(false)
+useEffect(() => {
+ if(!api_online){
+  Axios.get(EndPoint)
+  .then((res) => {
+    if(res.data.status == "ok"){
+      setapi_online(true)
+    }
+  } )
+ }
+})
 
 useEffect(() => {
    setTimeout(() => {
@@ -30,6 +44,7 @@ useEffect(() => {
    }, [message])
 
 const Submit = () => {
+ if(api_online){
    let email , password 
    email = FunGet.val("#email")
    password = FunGet.val("#password")
@@ -38,8 +53,10 @@ const Submit = () => {
       setloading(true)
       LoginAccount(email , password)
       .then( (role) => {
-        if(role == "admin"){
+        if(role == "super"){
          window.location.assign("/dashboard")
+        }else if(role == 'admin'){
+         window.location.assign("/products")
         }else{
          window.location.assign("/store")
         }
@@ -51,6 +68,9 @@ const Submit = () => {
    }else{
       setmessage("Ënter your  email and password")
    }
+ }else{
+   setmessage("Wait for api to finish loadding!")
+ }
 }
 return (
 
@@ -61,9 +81,10 @@ return (
    }
 
 <FullCenteredPage>
-<div className='width-300-max fit'>
+<div className=' fit' style={{maxWidth:"350px"}}>
 <div className="margin-bottom-40">
-      <div>
+<RowFlex gap={1} justify='space-between'>
+<div>
       <Text
    text='Welcome'
    heading='h2'
@@ -74,6 +95,23 @@ return (
    block
    />
       </div>
+      <div>
+      <RowFlex gap={1}>
+  <Text text={"API Status"} bold color='dark300' size='small'/>
+ {
+  api_online ?
+  <Circle size={1.3} bg='success' >
+<PiCheck />
+</Circle>
+:
+<Circle size={1.3} bg='dark800 text-dark'>
+<FunLoader size={1} />
+</Circle>
+ }
+
+  </RowFlex>
+      </div>
+</RowFlex>
 
 </div>
 <Section gap={1.5}>
@@ -92,7 +130,7 @@ return (
 </Section>
 {
    message &&
-   <Alert message={message}  type="danger"  fixed='top-right'/>
+   <Alert message={message}  type="danger"  fixed='top-middle' variant='top-danger' animation='SlideDown'/>
 }
 
 <Section gap={2} />

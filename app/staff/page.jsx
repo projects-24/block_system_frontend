@@ -190,6 +190,10 @@ body={
           {
               value:"admin",
               text:"Admin"
+          },
+          {
+              value:"super",
+              text:"Super Admin"
           }
          ]}
          />

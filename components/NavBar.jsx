@@ -25,11 +25,13 @@ import Circle from "funuicss/ui/specials/Circle";
 export default function NavBar({active}) {
   const [user, setuser] = useState("")
   const [isAdmin, setisAdmin] = useState(false)
+  const [isSuper, setisSuper] = useState(false)
   useEffect(() => {
    GetToken()
    .then( res => {
     setuser(res.user)
     setisAdmin( res.user.role == "admin" ? true  : false)
+    setisSuper( res.user.role == "super" ? true  : false)
    } )
   }, [])
   
@@ -74,7 +76,7 @@ export default function NavBar({active}) {
       <List>
       
   {
-    isAdmin &&
+    isSuper &&
     <ListItem>
     <Link href="/dashboard">
         <Button
@@ -105,19 +107,20 @@ export default function NavBar({active}) {
     </Link>
 </ListItem>
   }
+    
       <ListItem>
-          <Link href="/store">
-              <Button
-              fullWidth 
-              funcss={`_sidelink ${active == 1 ? "card" : ''}`}
-              text="Store"
-              startIcon={
-              <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
-                  <FaStoreAlt className="text-primary" />
-              </Div>}
-              />
-          </Link>
-      </ListItem>
+      <Link href="/store">
+          <Button
+          fullWidth 
+          funcss={`_sidelink ${active == 1 ? "card" : ''}`}
+          text="Store"
+          startIcon={
+          <Div width="25px" height="25px" funcss="central roundEdgeSmall  dark800">
+              <FaStoreAlt className="text-primary" />
+          </Div>}
+          />
+      </Link>
+  </ListItem>
       {
         isAdmin &&
         <ListItem>

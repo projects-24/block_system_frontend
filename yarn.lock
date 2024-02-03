@@ -1469,9 +1469,9 @@ functions-have-names@^1.2.3:
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
 funuicss@^1.11.10:
-  version "1.11.18"
-  resolved "https://registry.npmjs.org/funuicss/-/funuicss-1.11.18.tgz"
-  integrity sha512-O31Z5JAXanuKfbB1fIxkOHv6v5vvWYYwFjhqThojLAFuo96oxB9kpBCzpnKui9RGKAU74UHK8IpYF96lR8zApg==
+  version "1.12.1"
+  resolved "https://registry.npmjs.org/funuicss/-/funuicss-1.12.1.tgz"
+  integrity sha512-bw79HrZYR22KRfGEoAMuQQQyAIxa5fJgeWTiTPg6V4ipb/SRT7ETgccXQn030Qz/FE7sMVwHIbD9kBVy9KjMyg==
   dependencies:
     next "^13.3.1"
     react-icons "^4.11.0"
