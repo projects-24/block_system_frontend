@@ -7,7 +7,7 @@ import Table from 'funuicss/ui/table/Table'
 import TableData from 'funuicss/ui/table/Data'
 import TableRow from 'funuicss/ui/table/Row'
 import Header from '@/components/Header'
-import { EndPoint } from '@/default/Functions'
+import { EndPoint, GetToken } from '@/default/Functions'
 import { GetRequest } from '@/default/Functions'
 import ErrorAlert from '@/components/Error'
 import RowFlex from 'funuicss/ui/specials/RowFlex'
@@ -28,6 +28,19 @@ export default function Staffs() {
   const [docs, setdocs] = useState('')
   const [loading, setloading] = useState(false)
   const [modal, setmodal] = useState(false)
+
+  const [user, setuser] = useState("")
+  const [isAdmin, setisAdmin] = useState(false)
+  const [isSuper, setisSuper] = useState(false)
+  useEffect(() => {
+   GetToken()
+   .then( res => {
+    setuser(res.user)
+    setisAdmin( res.user.role == "admin" ? true  : false)
+    setisSuper( res.user.role == "super" ? true  : false)
+   } )
+  }, [])
+
   useEffect(() => {
   setTimeout(() => {
     seterr(false)
@@ -103,14 +116,14 @@ export default function Staffs() {
       {loading && <Loader />}
 
 <Modal 
-animation="ScaleUp" 
+animation="SlideDown" 
 duration={0.4} 
 open={modal}
-backdrop
-maxWidth="500px"
-title={<Text text="Create Staff" heading='h4' funcss='padding' block/>}
+funcss="flat"
+maxWidth="800px"
+title={<div className='container'><Text text="Create Staff" heading='h4' funcss='padding' block/></div>}
 body={
-  <div>
+  <div className='container'>
       <RowFlex gap={1}>
         <Col>
         <Text 
@@ -182,20 +195,33 @@ body={
          fullWidth
          id='role'
          select 
-         options={[
-          {
-              value:"staff",
-              text:"Staff"
-          },
-          {
-              value:"admin",
-              text:"Admin"
-          },
-          {
-              value:"super",
-              text:"Super Admin"
-          }
-         ]}
+         options={isSuper ?
+          [
+            {
+                value:"staff",
+                text:"Staff"
+            },
+            {
+                value:"admin",
+                text:"Admin"
+            },
+            {
+                value:"super",
+                text:"Super Admin"
+            }
+           ]
+           :
+           [
+            {
+                value:"staff",
+                text:"Staff"
+            },
+            {
+                value:"admin",
+                text:"Admin"
+            }
+           ]
+        }
          />
         </Col>
         <Section />
@@ -218,21 +244,23 @@ body={
 </div>
 }
 footer={
- <RowFlex justify='flex-end' gap={0.5} >
+<div className="container">
+<RowFlex justify='flex-end' gap={0.5} >
        <Button 
 bg="error"
 text="Cancel"
-rounded
+bold
 onClick={()=>setmodal(false)}
 />
 <Button 
 bg="primary"
 raised
-text="Create"
-rounded
+text="Submit"
+bold
 onClick={()=> Submit()}
 />
  </RowFlex>
+</div>
 }
 />
       

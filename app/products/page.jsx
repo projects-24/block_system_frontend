@@ -25,6 +25,7 @@ import Axios  from 'axios'
 import Circle from "funuicss/ui/specials/Circle"
 import Div from 'funuicss/ui/div/Div'
 import Multiselect from 'multiselect-react-dropdown';
+
 export default function Products() {
   const [err, seterr] = useState("")
   const [docs, setdocs] = useState('')
@@ -247,12 +248,14 @@ body={
 footer={
   <RowFlex funcss='container' gap={1} justify='flex-end'>
       <Button
+      bold
       text='No'
       color='error text-bold'
       startIcon={<PiX />}
       onClick={() => setmodal2(false) }
       />
       <Button
+      bold
       text='Yes'
       bg='primary'
       raised
@@ -475,18 +478,18 @@ updateQuantityById(doc._id, quantity);
 footer={
 <div className="container">
 <RowFlex justify='flex-end' gap={0.5} >
-       <Button 
+       <Button
+       bold 
 bg="error"
 text="Cancel"
-rounded
 onClick={()=>setmodal(false)}
 />
-<Button 
+<Button
+bold 
 bg="primary"
 raised
 text="Submit"
-startIcon={<PiCheck />}
-rounded
+endIcon={<PiCheck />}
 onClick={()=> Submit()}
 />
  </RowFlex>
@@ -511,7 +514,8 @@ onClick={()=> Submit()}
               <Text text={"Total"} size='small' color='primary' bold/>
             <Text text={docs ? docs.length : ""} block heading='h3'/>
               </div>
-    <Button 
+    <Button
+    bold 
    fillAnimation 
    outlined 
    outlineSize={0.13}

@@ -108,6 +108,8 @@ export default function NavBar({active}) {
 </ListItem>
   }
     
+     {
+      user.role == "staff" && 
       <ListItem>
       <Link href="/store">
           <Button
@@ -121,6 +123,7 @@ export default function NavBar({active}) {
           />
       </Link>
   </ListItem>
+     }
       {
         isAdmin &&
         <ListItem>
