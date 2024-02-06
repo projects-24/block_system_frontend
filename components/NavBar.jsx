@@ -170,7 +170,7 @@ export default function NavBar({active}) {
           </Link>
       </ListItem>
   {
-    isAdmin &&
+    isAdmin || isSuper ?
     <ListItem>
     <Link href="/staff">
         <Button
@@ -184,6 +184,7 @@ export default function NavBar({active}) {
         />
     </Link>
 </ListItem>
+:""
   }
       
       
