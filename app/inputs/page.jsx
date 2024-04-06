@@ -177,6 +177,7 @@ animation="SlideDown"
 duration={0.2} 
 open={modal2}
 maxWidth="500px"
+flat
 title={
 <Div funcss="container">
 <RowFlex justify='space-between'>
@@ -225,6 +226,7 @@ footer={
 <Modal 
 animation="SlideRight" 
 duration={0.4} 
+flat
 open={modal}
 maxWidth="500px"
 position="left"
@@ -355,8 +357,6 @@ onClick={()=> Submit()}
             <Header 
             title={"Inputs"} 
             sub_title={"create and manage inputs"}
-            sub_dir={"Dashboard"}
-            sub_dir_route={"/dashboard"}
             />
             <Card
             header={

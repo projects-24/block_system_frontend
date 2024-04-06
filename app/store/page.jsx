@@ -400,8 +400,6 @@ onClick={()=> Submit()}
             <Header 
             title={"Store"} 
             sub_title={"Sell products"}
-            sub_dir={"Dashboard"}
-            sub_dir_route={"/dashboard"}
             />
           <Div minHeight='90vh'>
           {

@@ -124,3 +124,13 @@ export const OnlyAdmin = () => {
     }
     } )
 }
+export const OnlySuperAdmin = () => {
+    GetToken()
+    .then( res => {
+    if(res.user.role == "super"){
+        
+    }else{
+        window.location.assign("/unauthorized")
+    }
+    } )
+}

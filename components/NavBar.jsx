@@ -41,7 +41,7 @@ export default function NavBar({active}) {
       <div className='padding-20'>
             <AppBar
             fixedTop
-            funcss="card transparent height-70"
+            funcss="card  height-70 z-index-10"
           left = {
            <Circle size={3.5} bg="dark800">
             <Image src="/logo.png" width={50} height={50}/>

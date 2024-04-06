@@ -16,7 +16,6 @@ import {FunGet} from "funuicss/js/Fun"
 import { LoginAccount , EndPoint } from '@/default/Functions'
 import Loader from '@/components/Loader'
 import Circle from 'funuicss/ui/specials/Circle'
-import { PiX} from "react-icons/pi"
 import FunLoader from "funuicss/ui/loader/Loader"
 import Axios  from 'axios'
 
@@ -80,7 +79,7 @@ return (
       loading && <Loader />
    }
 
-<FullCenteredPage>
+<FullCenteredPage funcss="dark900 text-dark">
 <div className=' fit' style={{maxWidth:"350px"}}>
 <div className="margin-bottom-40">
 <RowFlex gap={1} justify='space-between'>
@@ -105,7 +104,7 @@ return (
 </Circle>
 :
 <Circle size={1.3} bg='dark800 text-dark'>
-<FunLoader size={1} />
+<FunLoader size={15} />
 </Circle>
  }
 
@@ -137,11 +136,13 @@ return (
 
      <div className="section">
        <Button
-       text={"Let's go"}
+       text={"Login Account"}
        raised
        fullWidth
        bg='primary'
        onClick={Submit}
+       bold 
+       endIcon={<PiPaperPlaneRight />}
        />
 </div>
 

@@ -271,8 +271,6 @@ onClick={()=> Submit()}
             <Header 
             title={"Staffs"} 
             sub_title={"create and manage staffs"}
-            sub_dir={"Dashboard"}
-            sub_dir_route={"/dashboard"}
             />
             <Card
             header={

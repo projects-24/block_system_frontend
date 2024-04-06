@@ -121,8 +121,6 @@ export default function Products() {
                 <Header 
                 title={"Configuration"} 
                 sub_title={"configure and manage inputs and products threshold"}
-                sub_dir={"Dashboard"}
-                sub_dir_route={"/dashboard"}
                 />
     
                 <Section />

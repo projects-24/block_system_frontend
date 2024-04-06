@@ -294,8 +294,6 @@ onClick={()=> Submit()}
             <Header 
             title={"Installments"} 
             sub_title={"view and manage all installment payments."}
-            sub_dir={"Dashboard"}
-            sub_dir_route={"/dashboard"}
             />
        {
     docs &&

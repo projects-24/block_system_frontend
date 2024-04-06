@@ -14,7 +14,7 @@ import {PiArrowDown, PiArrowUp, PiCheck,  PiEye,  PiMoney,  PiPrinter,  PiUsersD
 import Button from 'funuicss/ui/button/Button'
 import Input from 'funuicss/ui/input/Input'
 import Axios from "axios";
-import {EndPoint, OnlyAdmin} from "../../default/Functions"
+import {EndPoint, OnlySuperAdmin} from "../../default/Functions"
 import Alert from "funuicss/ui/alert/Alert"
 import Loader from "@/components/Loader"
 import Table from 'funuicss/ui/table/Table'
@@ -44,7 +44,7 @@ export default function Dashboard() {
     const [user, setuser] = useState("")
     
     useEffect(() => {
-     OnlyAdmin()
+     OnlySuperAdmin()
     }, [])
     
 
@@ -145,7 +145,7 @@ export default function Dashboard() {
       />
         {
    err &&
-   <Alert message={err} raised type="warning" fixed="top-right"/>
+   <Alert message={<Text size="smaller" text={err} bold />} raised type="warning" standard animation="SlideLeft" fixed="top-right"/>
 }
 
         <Content>

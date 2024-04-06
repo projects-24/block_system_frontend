@@ -271,11 +271,10 @@ footer={
       {loading && <Loader />}
 
 <Modal 
-animation="SlideRight" 
+animation="SlideDown" 
 duration={0.4} 
 open={modal}
-position='left'
-maxWidth="700px"
+maxWidth="900px"
 title={
   <div className='container'>
     <Text text={udoc ? udoc.product.name : "New Product"} heading='h4' funcss='padding' block/>
@@ -504,10 +503,9 @@ onClick={()=> Submit()}
             <Header 
             title={"Products"} 
             sub_title={"create and manage Products"}
-            sub_dir={"Dashboard"}
-            sub_dir_route={"/dashboard"}
             />
             <Card
+            xl
             header={
             <RowFlex funcss="padding bb text-dark" gap={1} justify="space-between">
               <div>
